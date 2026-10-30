@@ -1,4 +1,47 @@
 {
+  "candidateAuth": {
+    "brand": "CV Extractor",
+    "organizer": "Pristini Junior Entreprise",
+    "language": "Langue",
+    "english": "English",
+    "french": "Français",
+    "email": "Adresse e-mail",
+    "password": "Mot de passe",
+    "newPassword": "Nouveau mot de passe",
+    "confirmPassword": "Confirmer le mot de passe",
+    "passwordHint": "Utilisez au moins 8 caractères et choisissez un mot de passe unique.",
+    "working": "Veuillez patienter…",
+    "logout": "Se déconnecter",
+    "forgotLink": "Mot de passe oublié ?",
+    "loginLink": "Retour à la connexion",
+    "noAccount": "Première visite ?",
+    "signupLink": "Créer un compte",
+    "pages": {
+      "signup": { "title": "Créez votre compte candidat", "description": "Enregistrez votre profil et préparez votre prochaine opportunité.", "submit": "Créer mon compte" },
+      "login": { "title": "Heureux de vous revoir", "description": "Connectez-vous pour importer votre CV ou gérer votre profil.", "submit": "Se connecter" },
+      "forgot": { "title": "Mot de passe oublié ?", "description": "Indiquez votre e-mail pour recevoir un lien et choisir un nouveau mot de passe.", "submit": "Envoyer le lien" },
+      "reset": { "title": "Choisissez un nouveau mot de passe", "description": "Ouvrez le lien reçu par e-mail, puis saisissez votre nouveau mot de passe ci-dessous.", "submit": "Enregistrer le mot de passe" }
+    },
+    "messages": {
+      "checkEmail": "Consultez vos e-mails pour confirmer votre compte. Revenez ensuite vous connecter.",
+      "resetEmail": "Si un compte existe pour cette adresse, un lien de réinitialisation a été envoyé. Vérifiez votre boîte de réception et vos spams.",
+      "passwordUpdated": "Votre mot de passe a été modifié. Connectez-vous avec le nouveau mot de passe.",
+      "confirmed": "Votre adresse e-mail est confirmée. Vous pouvez vous connecter."
+    },
+    "errors": {
+      "invalidEmail": "Saisissez une adresse e-mail valide.",
+      "weakPassword": "Choisissez un mot de passe plus fort avec au moins 8 caractères. Respectez aussi les règles supplémentaires de la plateforme.",
+      "passwordMismatch": "Les mots de passe ne correspondent pas. Saisissez le même mot de passe dans les deux champs.",
+      "invalidCredentials": "L’e-mail ou le mot de passe est incorrect. Veuillez réessayer.",
+      "emailNotConfirmed": "Confirmez votre adresse e-mail avant de vous connecter. Vérifiez votre boîte de réception et vos spams.",
+      "emailUsed": "Cette adresse e-mail est déjà utilisée. Connectez-vous ou réinitialisez votre mot de passe.",
+      "rateLimit": "Trop de tentatives. Patientez un peu avant de réessayer.",
+      "invalidLink": "Ce lien est absent, expiré ou déjà utilisé. Demandez un nouveau lien de réinitialisation ou connectez-vous si votre e-mail est déjà confirmé.",
+      "wrongRole": "Cette connexion est réservée aux candidats. Utilisez l’accès entreprise ou administrateur correspondant à votre compte.",
+      "unavailable": "Le service de compte est indisponible. Veuillez réessayer dans un instant.",
+      "failed": "Impossible de terminer votre demande. Veuillez réessayer."
+    }
+  },
   "placeholder": {
     "home": "CV Extractor — page d'accueil (S1-25)",
     "candidate": "Espace candidat — inscription, dépôt et vérification du CV ici (S1-26 → S1-32)",

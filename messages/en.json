@@ -1,4 +1,47 @@
 {
+  "candidateAuth": {
+    "brand": "CV Extractor",
+    "organizer": "Pristini Junior Entreprise",
+    "language": "Language",
+    "english": "English",
+    "french": "Français",
+    "email": "Email address",
+    "password": "Password",
+    "newPassword": "New password",
+    "confirmPassword": "Confirm password",
+    "passwordHint": "Use at least 8 characters. Choose a unique password.",
+    "working": "Please wait…",
+    "logout": "Log out",
+    "forgotLink": "Forgot your password?",
+    "loginLink": "Back to log in",
+    "noAccount": "New here?",
+    "signupLink": "Create an account",
+    "pages": {
+      "signup": { "title": "Create your candidate account", "description": "Save your profile and get ready to meet your next opportunity.", "submit": "Create account" },
+      "login": { "title": "Welcome back", "description": "Log in to upload your CV or manage your profile.", "submit": "Log in" },
+      "forgot": { "title": "Forgot your password?", "description": "Enter your email and we’ll send you a link to choose a new password.", "submit": "Send reset link" },
+      "reset": { "title": "Choose a new password", "description": "Open the link from your reset email, then enter your new password below.", "submit": "Save new password" }
+    },
+    "messages": {
+      "checkEmail": "Check your email to confirm your account. Then come back and log in.",
+      "resetEmail": "If an account exists for this email, we’ve sent a password reset link. Check your inbox and spam folder.",
+      "passwordUpdated": "Your password has been updated. Log in with your new password.",
+      "confirmed": "Your email is confirmed. You can now log in."
+    },
+    "errors": {
+      "invalidEmail": "Enter a valid email address.",
+      "weakPassword": "Choose a stronger password with at least 8 characters. Follow any additional password rules set by the platform.",
+      "passwordMismatch": "Your passwords don’t match. Enter the same password in both fields.",
+      "invalidCredentials": "The email or password is incorrect. Please try again.",
+      "emailNotConfirmed": "Confirm your email before logging in. Check your inbox and spam folder for the confirmation email.",
+      "emailUsed": "This email is already in use. Log in or reset your password.",
+      "rateLimit": "Too many attempts. Please wait a little before trying again.",
+      "invalidLink": "This link is missing, expired or already used. Request a new reset link, or try logging in if you’ve already confirmed your email.",
+      "wrongRole": "This login is for candidates. Please use the company or administrator login for your account.",
+      "unavailable": "We couldn’t connect to the account service. Please try again shortly.",
+      "failed": "We couldn’t complete your request. Please try again."
+    }
+  },
   "placeholder": {
     "home": "CV Extractor — landing page (S1-25)",
     "candidate": "Candidate space — sign-up, upload and review go here (S1-26 → S1-32)",
