@@ -460,6 +460,7 @@
     "retry": "Try again"
   },
   "myProfile": {
-    "manageCompanies": "Manage companies"
+    "manageCompanies": "Manage companies",
+    "browsePending": "Your company session is ready. CV browsing will be available soon."
   }
 }
