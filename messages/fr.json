@@ -460,6 +460,33 @@
     "retry": "Réessayer"
   },
   "myProfile": {
+    "title": "Mon profil",
+    "status": "Statut",
+    "draft": "Brouillon",
+    "approved": "Approuvé",
+    "hidden": "Masqué",
+    "actions": "Actions du profil",
+    "edit": "Modifier mon profil",
+    "editHint": "L’enregistrement met à jour votre profil approuvé et ses informations de recherche. Votre QR code reste identique.",
+    "save": "Enregistrer les modifications",
+    "qr": "Télécharger mon QR code",
+    "upload": "Importer un nouveau CV",
+    "delete": "Supprimer mon compte",
+    "hide": "Masquer mon profil",
+    "hiddenHint": "Votre profil est masqué dans les listes, la recherche et les liens QR des entreprises.",
+    "visibleHint": "Votre profil approuvé est visible pour les entreprises actives.",
+    "failed": "Impossible de charger ou d’enregistrer votre profil. Veuillez réessayer.",
+    "noProfile": "Importez votre CV pour créer votre profil.",
+    "draftHint": "Votre profil est encore un brouillon. Vérifiez-le et approuvez-le pour le partager avec les entreprises.",
+    "current": "En cours",
+    "lookingFor": "Recherche",
+    "opportunities": {
+      "pfe": "Stage de fin d’études (PFE)",
+      "internship": "Stage",
+      "job": "Emploi"
+    },
+    "accountPending": "La suppression du compte n’est pas encore disponible. Contactez les organisateurs pour demander la suppression.",
+    "back": "Retour à mon profil",
     "manageCompanies": "Gérer les entreprises",
     "browsePending": "Votre session entreprise est prête. La consultation des CV sera bientôt disponible."
   }
