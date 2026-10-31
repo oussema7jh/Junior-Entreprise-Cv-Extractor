@@ -20,7 +20,8 @@ test("real page role matrix redirects logged-out/wrong-role visitors", async () 
   for (const [role, path, login] of [["candidate", "/candidate/profile", "/candidate/login"], ["company", "/company/cvs", "/company/login"], ["admin", "/admin/companies", "/admin/login"]] as const) {
     const anonymous = await call(path);
     assert.equal(anonymous.status, 307);
-    assert.equal(new URL(anonymous.headers.get("location")!).pathname, login);
+    assert.ok(anonymous.headers.get("location"), "redirect must provide Location");
+    assert.equal(new URL(anonymous.headers.get("location")!, APP_URL).pathname, login);
     for (const [visitorRole, user] of [["candidate", candidate], ["company", company], ["admin", organiser]] as const) {
       const response = await call(path, user);
       assert.equal(response.status, visitorRole === role ? 200 : 307, `${visitorRole} → ${path}`);
@@ -38,15 +39,22 @@ test("admin API refuses candidate/company/logged-out calls and cross-site mutati
 });
 
 test("disable blocks an existing session; enable restores it", async () => {
+  try {
   assert.equal((await call(`/api/admin/companies/${company.id}/disable`, organiser, {})).status, 200);
   const blocked = await call("/company/cvs", company);
   assert.equal(blocked.status, 307);
-  assert.equal(new URL(blocked.headers.get("location")!).pathname, "/company/login");
+  assert.ok(blocked.headers.get("location"), "redirect must provide Location");
+  assert.equal(new URL(blocked.headers.get("location")!, APP_URL).pathname, "/company/login");
   const login = await call("/api/company/auth", undefined, { email: company.email, password: company.password });
   assert.equal(login.status, 403);
   assert.equal((await login.json()).error, "disabled");
   assert.equal((await call(`/api/admin/companies/${company.id}/enable`, organiser, {})).status, 200);
   assert.equal((await call("/company/cvs", company)).status, 200);
+  } finally {
+    // Keep later visibility tests independent if any assertion above fails.
+    const restored = await admin.from("companies").update({ disabled: false }).eq("user_id", company.id);
+    assert.equal(restored.error, null);
+  }
 });
 
 test("hidden profiles disappear from company reads; edits queue embeddings and reject stale versions", async () => {
