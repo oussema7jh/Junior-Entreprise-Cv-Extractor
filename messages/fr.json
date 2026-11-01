@@ -457,7 +457,9 @@
     "emailFailed": "Le compte/code a été enregistré, mais l’envoi de l’e-mail a échoué. Utilisez « Renvoyer un code » pour en générer et envoyer un autre.",
     "loading": "Chargement des entreprises…",
     "empty": "Aucune entreprise inscrite.",
-    "retry": "Réessayer"
+    "retry": "Réessayer",
+    "search": "Rechercher une entreprise",
+    "noResults": "Aucune entreprise ne correspond à votre recherche."
   },
   "myProfile": {
     "manageCompanies": "Gérer les entreprises",

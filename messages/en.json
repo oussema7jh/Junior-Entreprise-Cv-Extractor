@@ -457,7 +457,9 @@
     "emailFailed": "The account/code was saved, but email delivery failed. Use Resend code to generate and send another code.",
     "loading": "Loading companies…",
     "empty": "No companies registered yet.",
-    "retry": "Try again"
+    "retry": "Try again",
+    "search": "Search companies",
+    "noResults": "No companies match your search."
   },
   "myProfile": {
     "manageCompanies": "Manage companies",
