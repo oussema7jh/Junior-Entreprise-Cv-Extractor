@@ -3,12 +3,13 @@
 // (Next.js 16 Cache Components: node_modules/next/dist/docs/01-app/02-guides/authentication-with-cache-components.md).
 import { Suspense } from "react";
 import { getCurrentUser } from "@/lib/auth";
-import en from "@/messages/en.json";
+import { getTranslations } from "next-intl/server";
 
-export default function WhoAmIPage() {
+export default async function WhoAmIPage() {
+  const t = await getTranslations("whoami");
   return (
     <main className="flex flex-1 items-center justify-center p-8">
-      <Suspense fallback={<p className="text-lg">{en.whoami.loading}</p>}>
+      <Suspense fallback={<p className="text-lg">{t("loading")}</p>}>
         <WhoAmI />
       </Suspense>
     </main>
@@ -16,10 +17,11 @@ export default function WhoAmIPage() {
 }
 
 async function WhoAmI() {
+  const t = await getTranslations("whoami");
   const user = await getCurrentUser();
   return (
     <p className="text-lg">
-      {user ? `${en.whoami.loggedInAs} ${user.email} (${user.role ?? en.whoami.noRole})` : en.whoami.notLoggedIn}
+      {user ? `${t("loggedInAs")} ${user.email} (${user.role ?? t("noRole")})` : t("notLoggedIn")}
     </p>
   );
 }

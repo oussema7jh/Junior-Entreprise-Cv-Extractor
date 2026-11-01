@@ -1,14 +1,502 @@
 {
+  "candidateAuth": {
+    "email": "Email address",
+    "password": "Password",
+    "newPassword": "New password",
+    "confirmPassword": "Confirm password",
+    "passwordHint": "Use at least 8 characters. Choose a unique password.",
+    "working": "Please wait…",
+    "logout": "Log out",
+    "forgotLink": "Forgot your password?",
+    "loginLink": "Back to log in",
+    "noAccount": "New here?",
+    "signupLink": "Create an account",
+    "pages": {
+      "signup": {
+        "title": "Create your candidate account",
+        "description": "Save your profile and get ready to meet your next opportunity.",
+        "submit": "Create account"
+      },
+      "login": {
+        "title": "Welcome back",
+        "description": "Log in to upload your CV or manage your profile.",
+        "submit": "Log in"
+      },
+      "forgot": {
+        "title": "Forgot your password?",
+        "description": "Enter your email and we’ll send you a link to choose a new password.",
+        "submit": "Send reset link"
+      },
+      "reset": {
+        "title": "Choose a new password",
+        "description": "Open the link from your reset email, then enter your new password below.",
+        "submit": "Save new password"
+      }
+    },
+    "messages": {
+      "checkEmail": "Check your email to confirm your account. Then come back and log in.",
+      "resetEmail": "If an account exists for this email, we’ve sent a password reset link. Check your inbox and spam folder.",
+      "passwordUpdated": "Your password has been updated. Log in with your new password.",
+      "confirmed": "Your email is confirmed. You can now log in."
+    },
+    "errors": {
+      "invalidEmail": "Enter a valid email address.",
+      "weakPassword": "Choose a stronger password with at least 8 characters. Follow any additional password rules set by the platform.",
+      "passwordMismatch": "Your passwords don’t match. Enter the same password in both fields.",
+      "invalidCredentials": "The email or password is incorrect. Please try again.",
+      "emailNotConfirmed": "Confirm your email before logging in. Check your inbox and spam folder for the confirmation email.",
+      "emailUsed": "This email is already in use. Log in or reset your password.",
+      "rateLimit": "Too many attempts. Please wait a little before trying again.",
+      "invalidLink": "This link is missing, expired or already used. Request a new reset link, or try logging in if you’ve already confirmed your email.",
+      "wrongRole": "This login is for candidates. Please use the company or administrator login for your account.",
+      "unavailable": "We couldn’t connect to the account service. Please try again shortly.",
+      "failed": "We couldn’t complete your request. Please try again."
+    }
+  },
   "placeholder": {
-    "home": "CV Extractor — landing page (S1-25)",
     "candidate": "Candidate space — sign-up, upload and review go here (S1-26 → S1-32)",
     "company": "Company space — CVs, search and QR scan go here (Sprint 2)",
-    "admin": "Admin dashboard — companies and statistics go here (Sprint 2)"
+    "admin": "Admin dashboard — companies and statistics go here (Sprint 2)",
+    "home": "CV Extractor — landing page (S1-25)"
   },
   "whoami": {
     "loggedInAs": "Logged in as",
     "noRole": "no role",
     "notLoggedIn": "Not logged in",
     "loading": "Checking…"
+  },
+  "upload": {
+    "errors": {
+      "not_logged_in": "Please log in to upload your CV.",
+      "email_not_confirmed": "Please confirm your email address first: we sent you a link.",
+      "not_candidate": "Only candidate accounts can upload a CV.",
+      "no_consent": "Please accept the consent text before uploading.",
+      "no_looking_for": "Please choose what you are looking for: PFE, internship or job.",
+      "no_file": "Please choose a file to upload.",
+      "too_large": "This file is over 5 MB. Please upload a smaller file.",
+      "word_file": "This is a Word file. Please export it as PDF first, then upload the PDF.",
+      "bad_type": "This file type isn't supported. Please upload a PDF, JPG or PNG.",
+      "daily_limit": "You have reached today's limit of 5 uploads. Please try again tomorrow.",
+      "upload_failed": "Your CV couldn't be saved. Please try again in a moment.",
+      "wrongType": "This file type isn’t supported. Choose a PDF, JPG or PNG file.",
+      "tooBig": "Your CV is too large. Choose a file no larger than 5 MB.",
+      "emptyFile": "This file is empty. Choose another CV.",
+      "multipleFiles": "Please choose just one CV at a time.",
+      "noFile": "Choose a CV to upload.",
+      "noChoice": "Choose PFE, Internship or Job to continue.",
+      "noConsent": "Your consent is required before we can process your CV.",
+      "dailyLimit": "You’ve reached today’s upload limit. Please try again tomorrow.",
+      "unauthorized": "Your session has expired or you don’t have access. Please sign in again before uploading.",
+      "unavailable": "CV uploads are temporarily unavailable. Please try again later.",
+      "network": "The upload couldn’t finish. Check your connection and try again. If it was already received, check your profile before retrying.",
+      "failed": "We couldn’t upload your CV. Please try again."
+    },
+    "pageTitle": "Upload your CV · CV Extractor",
+    "progressLabel": "Your profile, step by step",
+    "steps": {
+      "upload": "Upload",
+      "review": "Review",
+      "profile": "My profile"
+    },
+    "title": "Your next opportunity starts here",
+    "description": "Upload your CV and we’ll help fill in your profile. You’ll review everything before sharing it with recruiters.",
+    "lookingFor": "I’m looking for",
+    "choices": {
+      "pfe": "PFE",
+      "internship": "Internship",
+      "job": "Job"
+    },
+    "cv": "Your CV",
+    "dropTitle": "Drop your CV here",
+    "dropDescription": "Or choose a file from your device.",
+    "chooseFile": "Choose a file",
+    "takePhoto": "Take a photo",
+    "formats": "PDF, JPG or PNG, max 5 MB",
+    "kb": "KB",
+    "removeFile": "Remove selected CV",
+    "consent": "I agree to create my profile on this platform. Once I approve it, companies registered for the job fair can see my full profile, including my contact details. I understand that my CV is read by Google Gemini (free tier, which may use it to improve Google's AI models) to build my profile, and that I can delete my data at any time.",
+    "privacy": "Read the privacy notice (opens in a new tab)",
+    "submit": "Upload my CV",
+    "uploading": "Uploading your CV…",
+    "wait": "Please keep this page open while your CV uploads.",
+    "requirements": "Choose an opportunity, select a valid CV and give your consent to continue.",
+    "reassurance": "Nothing is shown to recruiters before you approve your profile. Your original CV is deleted after processing."
+  },
+  "approved": {
+    "loading": "Loading your QR code…",
+    "unauthorized": "Please log in with your candidate account.",
+    "notApproved": "Your profile isn't approved yet. Review it first, then approve it.",
+    "toReview": "Review my profile",
+    "unavailable": "The QR code isn't available right now. Please try again later.",
+    "title": "Your profile is approved",
+    "explain": "Show this QR code to recruiters at the fair.",
+    "qrAlt": "QR code that opens your profile",
+    "download": "Download my QR code (PNG)"
+  },
+  "site": {
+    "clubName": "Pristini Junior Entreprise",
+    "appName": "CV Extractor",
+    "home": "Home",
+    "privacy": "Privacy notice",
+    "footerNote": "The job-fair CV platform",
+    "userMenu": {
+      "open": "Open the account menu",
+      "signedInAs": "Signed in as",
+      "mySpace": "My space",
+      "noRole": "no role",
+      "logOut": "Log out"
+    },
+    "roles": {
+      "candidate": "Candidate",
+      "company": "Company",
+      "admin": "Admin"
+    },
+    "language": {
+      "label": "Language",
+      "en": "English",
+      "fr": "Français"
+    }
+  },
+  "styleguide": {
+    "title": "Style guide",
+    "intro": "Every shared component in the club style. Copy from here instead of rewriting.",
+    "colours": "Colours",
+    "typography": "Typography",
+    "headingSample": "Heading",
+    "bodySample": "Body text: candidates upload a CV, the AI fills in their profile.",
+    "buttons": "Buttons",
+    "forms": "Form fields",
+    "emailLabel": "Email",
+    "emailPlaceholder": "name@example.com",
+    "messageLabel": "Message",
+    "messagePlaceholder": "Write a few lines…",
+    "lookingForLabel": "Looking for",
+    "lookingForPlaceholder": "Choose…",
+    "pfe": "PFE",
+    "internship": "Internship",
+    "job": "Job",
+    "consent": "I accept the consent text",
+    "cardsBadges": "Cards and badges",
+    "cardTitle": "Card title",
+    "cardDescription": "A short description under the title.",
+    "cardBody": "Card content goes here.",
+    "badgeDefault": "Approved",
+    "badgeSecondary": "Draft",
+    "badgeOutline": "Queued",
+    "badgeDestructive": "Failed",
+    "overlays": "Dialog and toast",
+    "openDialog": "Open the dialog",
+    "dialogTitle": "Dialog title",
+    "dialogDescription": "Use a dialog for a short question that needs an answer.",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "showToast": "Show a toast",
+    "toastMessage": "Your profile has been saved.",
+    "tabs": "Tabs",
+    "tabOne": "Profile",
+    "tabTwo": "Settings",
+    "tabOneBody": "Content of the first tab.",
+    "tabTwoBody": "Content of the second tab.",
+    "layout": "Layout",
+    "layoutBody": "SiteHeader and SiteFooter sit in app/layout.tsx, so they appear on every page. Wrap page content in PageContainer."
+  },
+  "landing": {
+    "eyebrow": "Pristini JE job fair · Wednesday 11 November 2026",
+    "title": "Your CV, ready for recruiters in minutes",
+    "subtitle": "Upload your CV, our AI fills in your profile, you check it and get a QR code to show at the fair.",
+    "candidate": {
+      "title": "I'm a candidate",
+      "text": "Looking for a PFE, an internship or a job? Create your profile from your CV.",
+      "cta": "Upload my CV"
+    },
+    "company": {
+      "title": "I'm a company",
+      "text": "Search the candidates' profiles and scan their QR codes at the fair. The club sends you your login.",
+      "cta": "Company login"
+    },
+    "howTitle": "How it works",
+    "steps": [
+      {
+        "title": "Upload your CV",
+        "text": "PDF, JPG or PNG, up to 5 MB. A photo from your phone works too."
+      },
+      {
+        "title": "Check your profile",
+        "text": "Our AI fills it in for you. Fix anything it missed, then approve it. Nothing is shown to recruiters before you do."
+      },
+      {
+        "title": "Show your QR code",
+        "text": "At the fair, recruiters scan it and open your profile. Your CV file is deleted after reading."
+      }
+    ]
+  },
+  "processing": {
+    "title": "We are reading your CV",
+    "queued": "Your CV is in the queue.",
+    "position": "You're number {position} in line",
+    "queuedHint": "Our AI reads the CVs one after the other. You can leave this page: your CV is kept, and you'll find it here next time you log in.",
+    "processing": "Our AI is reading your CV…",
+    "processingHint": "This usually takes less than a minute.",
+    "done": "Your profile is ready!",
+    "doneHint": "Taking you to your profile so you can check it…",
+    "goToReview": "Check my profile",
+    "failed": "We couldn't read your CV",
+    "failedDefault": "Something went wrong while reading your CV. Please try again.",
+    "tryAgain": "Try another file",
+    "slow": "This is taking longer than usual. You can keep waiting: your place is kept.",
+    "notFound": "We can't find this CV. It may belong to another account.",
+    "notLoggedIn": "Log in with your candidate account to follow your CV.",
+    "offline": "Connection lost. Trying again…",
+    "steps": {
+      "queued": "In the queue",
+      "processing": "Reading",
+      "done": "Ready"
+    },
+    "errors": {
+      "failed_to_read": "We couldn't read this file. Try a PDF export of your CV.",
+      "try_later": "Our AI is very busy right now. Please try again in a few minutes.",
+      "wrong_type": "This file type isn't supported. Upload a PDF, JPG or PNG file."
+    }
+  },
+  "review": {
+    "title": "Review your profile",
+    "intro": "Check the information extracted from your CV. Save an unfinished draft or approve when you are ready.",
+    "personal": "Personal information",
+    "about": "About",
+    "skills": "Skills",
+    "classification": "Classification",
+    "domain": "Domain",
+    "seniority": "Seniority",
+    "unknown": "Not specified",
+    "addSkill": "Add skill",
+    "removeSkill": "Remove skill",
+    "missing": "Not found in your CV — check this field.",
+    "save": "Save draft",
+    "approve": "Approve",
+    "saving": "Saving…",
+    "saved": "Draft saved.",
+    "loading": "Loading your draft…",
+    "unavailable": "Profile review is temporarily unavailable. Please try again later.",
+    "unauthorized": "Sign in with your candidate account to review your profile.",
+    "failedLoad": "Unable to load your draft. Please reload the page.",
+    "noDraft": "Your draft is not ready yet. Upload a CV and wait for processing to finish.",
+    "invalidDraft": "This draft does not match the current profile format. Please contact the project team.",
+    "invalid": "Check the highlighted fields before continuing.",
+    "invalidField": "Check this field.",
+    "required": "This field is required.",
+    "failed": "Unable to save. Your edits are still here; please try again.",
+    "conflict": "Your draft changed elsewhere or was approved. Reload the page before saving again.",
+    "approvalFailed": "Draft saved, but approval failed. Please try again.",
+    "fields": {
+      "basics_name": "Full name",
+      "basics_email": "Email",
+      "basics_phone": "Phone",
+      "basics_city": "City",
+      "basics_country": "Country",
+      "basics_headline": "Headline",
+      "basics_summary": "Summary",
+      "availability": "Availability"
+    },
+    "domains": {
+      "software_engineering": "Software engineering",
+      "data_ai": "Data and AI",
+      "cybersecurity": "Cybersecurity",
+      "networks_telecom": "Networks and telecommunications",
+      "embedded_iot": "Embedded systems and IoT",
+      "electrical_engineering": "Electrical engineering",
+      "mechanical_engineering": "Mechanical engineering",
+      "civil_engineering": "Civil engineering",
+      "industrial_engineering": "Industrial engineering",
+      "business_management": "Business and management",
+      "finance_accounting": "Finance and accounting",
+      "marketing_communication": "Marketing and communication",
+      "design_multimedia": "Design and multimedia",
+      "other": "Other"
+    },
+    "seniorities": {
+      "student": "Student",
+      "junior": "Junior",
+      "experienced": "Experienced"
+    },
+    "approvalRequirements": "For approval, your name and email are required. Sections are optional; added entries need their identifying fields. Dates, degrees and language levels can be left blank.",
+    "approving": "Approving…",
+    "yearsExperience": "Years of professional experience",
+    "skillCategory": "Skill category",
+    "skillCategories": {
+      "technical": "Technical",
+      "tool": "Tool",
+      "soft": "Soft skill"
+    }
+  },
+  "reviewSections": {
+    "sections": {
+      "education": "Education",
+      "experience": "Experience",
+      "projects": "Projects",
+      "languages": "Languages",
+      "certifications": "Certifications",
+      "basics_links": "Professional links"
+    },
+    "fields": {
+      "label": "Link label",
+      "url": "URL (http:// or https://)",
+      "institution": "School",
+      "degree": "Degree",
+      "field": "Field of study",
+      "start_date": "Start (YYYY or YYYY-MM)",
+      "end_date": "End (YYYY or YYYY-MM)",
+      "current": "Currently studying or working here",
+      "grade": "Grade or honours",
+      "company": "Company",
+      "position": "Role",
+      "type": "Experience type",
+      "location": "Location",
+      "description": "Description",
+      "technologies": "Technologies (comma separated)",
+      "name": "Name",
+      "level": "Language level",
+      "issuer": "Issuer",
+      "date": "Date (YYYY or YYYY-MM)"
+    },
+    "add": "Add",
+    "remove": "Remove",
+    "empty": "No entries yet. This section is optional.",
+    "required": "This field is required.",
+    "requiredMark": "(required)",
+    "optionalMark": "(optional)",
+    "invalidYear": "Enter a four-digit year.",
+    "invalidMonth": "Enter a valid month and year.",
+    "invalidRange": "End must be on or after start.",
+    "approve": "Approve",
+    "save": "Save draft",
+    "saving": "Saving…",
+    "approving": "Approving…",
+    "saved": "Draft saved.",
+    "approved": "Profile approved.",
+    "failed": "Unable to save your changes. Please try again.",
+    "invalid": "Please complete the required fields below before approving.",
+    "options": {
+      "internship": "Internship",
+      "job": "Job",
+      "freelance": "Freelance",
+      "volunteer": "Volunteer",
+      "other": "Other",
+      "native": "Native",
+      "fluent": "Fluent",
+      "advanced": "Advanced",
+      "intermediate": "Intermediate",
+      "basic": "Basic"
+    },
+    "unknown": "Not specified"
+  },
+  "privacy": {
+    "pageTitle": "Privacy notice",
+    "title": "How we handle your data",
+    "intro": "We built this platform to connect you with the recruiters at the Pristini JE job fair. We handle your personal information (your name, phone number, email and career history), so here is exactly what happens when you upload your CV.",
+    "sections": [
+      {
+        "title": "1. How your CV is read (AI extraction)",
+        "text": "Instead of making you fill in long forms, we send your CV to an AI service, Google Gemini, which reads it and fills in your profile. We use Gemini's free tier, so Google may use your CV to train and improve its AI models."
+      },
+      {
+        "title": "2. Your CV file is not kept",
+        "text": "The file you upload is deleted as soon as the AI has read it, or if reading fails. Only the profile built from it is kept. When a recruiter downloads your CV, they get a PDF made from your profile, never your original file."
+      },
+      {
+        "title": "3. Who can see your profile",
+        "text": "Nobody sees anything before you check and approve your profile. Once you approve it, every company registered for the fair can see your full profile, including your phone number and email, so they can contact you for interviews. Besides those companies, the only service that receives your CV is Google Gemini, which reads it. We never sell your data."
+      },
+      {
+        "title": "4. How long it is kept, and how to delete it",
+        "text": "Your profile is kept for this job fair. You can delete your profile and your account at any time from \"My profile\"."
+      }
+    ],
+    "contact": {
+      "title": "5. Your rights and who to contact",
+      "text": "Under the Tunisian personal data protection law (Organic Law No. 2004-63 of 27 July 2004), you can access, correct or delete your personal information at any time. Questions? Write to the Pristini Junior Entreprise team at {email}."
+    }
+  },
+  "spaceLogin": {
+    "company": "Company login",
+    "admin": "Administrator login",
+    "email": "Email",
+    "code": "Access code",
+    "password": "Password",
+    "submit": "Log in",
+    "working": "Logging in…",
+    "noCode": "No code? Ask the Pristini JE team at the welcome desk.",
+    "errors": {
+      "disabled": "This company account is disabled. Please contact the organisers.",
+      "invalidCredentials": "The email or access code/password is incorrect.",
+      "rateLimit": "Too many attempts. Please try again in a few minutes.",
+      "failed": "Unable to log in. Please try again."
+    }
+  },
+  "companies": {
+    "title": "Company management",
+    "name": "Company name",
+    "email": "Email",
+    "sector": "Sector",
+    "created": "Date added",
+    "status": "Status",
+    "actions": "Actions",
+    "add": "Add company and email code",
+    "resend": "Resend code",
+    "disable": "Disable",
+    "enable": "Enable",
+    "active": "Active",
+    "disabled": "Disabled",
+    "confirmResend": "Send a new code to {name}? The previous code will stop working.",
+    "confirmDisable": "Disable {name}? They will lose access immediately.",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "success": "The action completed successfully.",
+    "failed": "Unable to complete the action. Please try again.",
+    "invalid": "Check the company name, email and sector.",
+    "emailUsed": "This email already has an account.",
+    "emailFailed": "The account/code was saved, but email delivery failed. Use Resend code to generate and send another code.",
+    "loading": "Loading companies…",
+    "empty": "No companies registered yet.",
+    "retry": "Try again",
+    "search": "Search companies",
+    "noResults": "No companies match your search."
+  },
+  "myProfile": {
+    "title": "My profile",
+    "status": "Status",
+    "draft": "Draft",
+    "approved": "Approved",
+    "hidden": "Hidden",
+    "actions": "Profile actions",
+    "edit": "Edit my profile",
+    "editHint": "Saving updates your approved profile and refreshes its search information. Your QR code stays the same.",
+    "save": "Save changes",
+    "qr": "Download my QR code",
+    "upload": "Upload a new CV",
+    "delete": "Delete my account",
+    "hide": "Hide my profile",
+    "hiddenHint": "Your profile is hidden from company browsing, search and QR links.",
+    "visibleHint": "Your approved profile is visible to active companies.",
+    "failed": "Unable to load or save your profile. Please try again.",
+    "noProfile": "Upload your CV to create your profile.",
+    "draftHint": "Your profile is still a draft. Review and approve it to share it with companies.",
+    "current": "Current",
+    "lookingFor": "Looking for",
+    "opportunities": {
+      "pfe": "End-of-studies internship (PFE)",
+      "internship": "Internship",
+      "job": "Job"
+    },
+    "accountPending": "Account deletion is not available yet. Contact the organisers to request deletion.",
+    "back": "Back to my profile",
+    "manageCompanies": "Manage companies",
+    "browsePending": "Your company session is ready. CV browsing will be available soon.",
+    "qrStable": "Your QR code never changes when you edit your profile. You can keep using the same downloaded QR code.",
+    "deleteWarning": "This permanently deletes your account, profile, drafts and uploaded CV files. This cannot be undone.",
+    "deleteConfirm": "Type DELETE to confirm",
+    "deleteSubmit": "Permanently delete my account",
+    "deleteBusy": "Deleting…",
+    "deleteFailed": "Unable to delete your account. Nothing has been confirmed deleted. Please try again.",
+    "deleteCancel": "Cancel"
   }
 }

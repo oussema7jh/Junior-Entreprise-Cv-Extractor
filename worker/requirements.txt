@@ -1,4 +1,11 @@
-# The worker's libraries. The AI tasks add theirs here (mistralai in S1-20, google-genai in S1-21,
-# supabase in S1-24), pinned to an exact version like these.
+# The worker's libraries, pinned to an exact version.
 ruff==0.17.3
 pytest==9.2.0
+# S1-15: the profile schema
+pydantic==2.14.1
+# S1-20: Google Gemini (reads PDFs and photos directly, no separate OCR step)
+google-genai==2.33.0
+# S1-20: HTTP errors and timeouts from Gemini; the tests fake Gemini with its MockTransport
+httpx==0.28.1
+# S1-24: the job queue, the temporary bucket and the drafts (service role, server only)
+supabase==2.33.0

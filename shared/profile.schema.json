@@ -1,0 +1,652 @@
+{
+  "additionalProperties": false,
+  "description": "A candidate profile: what the AI extracted plus what the candidate chose.",
+  "properties": {
+    "basics": {
+      "additionalProperties": false,
+      "description": "Identity and contact details.",
+      "properties": {
+        "name": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Full name of the candidate, as written in the CV.",
+          "title": "Name"
+        },
+        "email": {
+          "anyOf": [
+            {
+              "pattern": "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Email address, or null if absent.",
+          "title": "Email"
+        },
+        "phone": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Phone number as written, including the country code if present.",
+          "title": "Phone"
+        },
+        "city": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "City where the candidate lives.",
+          "title": "City"
+        },
+        "country": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Country where the candidate lives.",
+          "title": "Country"
+        },
+        "headline": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Short professional title, e.g. \"Computer engineering student\".",
+          "title": "Headline"
+        },
+        "summary": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "The CV's own profile/summary paragraph. Do not write one if absent.",
+          "title": "Summary"
+        },
+        "links": {
+          "description": "LinkedIn, GitHub, portfolio and other links.",
+          "items": {
+            "additionalProperties": false,
+            "description": "A public link found in the CV.",
+            "properties": {
+              "label": {
+                "description": "What the link is, e.g. \"LinkedIn\", \"GitHub\", \"Portfolio\".",
+                "minLength": 1,
+                "title": "Label",
+                "type": "string"
+              },
+              "url": {
+                "description": "Full URL, starting with http:// or https://.",
+                "pattern": "^https?://\\S+$",
+                "title": "Url",
+                "type": "string"
+              }
+            },
+            "required": [
+              "label",
+              "url"
+            ],
+            "title": "Link",
+            "type": "object"
+          },
+          "title": "Links",
+          "type": "array"
+        }
+      },
+      "required": [
+        "name",
+        "email",
+        "phone",
+        "city",
+        "country",
+        "headline",
+        "summary",
+        "links"
+      ],
+      "title": "Basics",
+      "type": "object"
+    },
+    "availability": {
+      "anyOf": [
+        {
+          "minLength": 1,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "When the candidate is available, as stated, e.g. \"Immediately\", \"February 2027\".",
+      "title": "Availability"
+    },
+    "education": {
+      "description": "Education entries, most recent first.",
+      "items": {
+        "additionalProperties": false,
+        "description": "One education entry.",
+        "properties": {
+          "institution": {
+            "description": "School or university name.",
+            "minLength": 1,
+            "title": "Institution",
+            "type": "string"
+          },
+          "degree": {
+            "anyOf": [
+              {
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Degree or diploma, e.g. \"Engineering degree\", \"Licence\", \"Baccalauréat\".",
+            "title": "Degree"
+          },
+          "field": {
+            "anyOf": [
+              {
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Field of study, e.g. \"Computer Science\".",
+            "title": "Field"
+          },
+          "start_date": {
+            "anyOf": [
+              {
+                "pattern": "^\\d{4}(-(0[1-9]|1[0-2]))?$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Start date, YYYY or YYYY-MM, or null.",
+            "title": "Start Date"
+          },
+          "end_date": {
+            "anyOf": [
+              {
+                "pattern": "^\\d{4}(-(0[1-9]|1[0-2]))?$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "End or expected end date, YYYY or YYYY-MM, or null.",
+            "title": "End Date"
+          },
+          "current": {
+            "description": "True if the candidate is still studying here.",
+            "title": "Current",
+            "type": "boolean"
+          },
+          "grade": {
+            "anyOf": [
+              {
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Grade or honours if stated, e.g. \"Très bien\", \"GPA 3.6\".",
+            "title": "Grade"
+          }
+        },
+        "required": [
+          "institution",
+          "degree",
+          "field",
+          "start_date",
+          "end_date",
+          "current",
+          "grade"
+        ],
+        "title": "Education",
+        "type": "object"
+      },
+      "title": "Education",
+      "type": "array"
+    },
+    "experience": {
+      "description": "Experience entries, most recent first.",
+      "items": {
+        "additionalProperties": false,
+        "description": "One professional experience: job, internship, freelance or volunteering.",
+        "properties": {
+          "company": {
+            "description": "Company or organisation name.",
+            "minLength": 1,
+            "title": "Company",
+            "type": "string"
+          },
+          "position": {
+            "description": "Job or internship title.",
+            "minLength": 1,
+            "title": "Position",
+            "type": "string"
+          },
+          "type": {
+            "description": "Kind of experience. A PFE or summer internship is \"internship\".",
+            "enum": [
+              "internship",
+              "job",
+              "freelance",
+              "volunteer",
+              "other"
+            ],
+            "title": "Type",
+            "type": "string"
+          },
+          "location": {
+            "anyOf": [
+              {
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "City and/or country of the position.",
+            "title": "Location"
+          },
+          "start_date": {
+            "anyOf": [
+              {
+                "pattern": "^\\d{4}(-(0[1-9]|1[0-2]))?$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Start date, YYYY or YYYY-MM, or null.",
+            "title": "Start Date"
+          },
+          "end_date": {
+            "anyOf": [
+              {
+                "pattern": "^\\d{4}(-(0[1-9]|1[0-2]))?$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "End date, YYYY or YYYY-MM, or null if current or unknown.",
+            "title": "End Date"
+          },
+          "current": {
+            "description": "True if the candidate still holds this position.",
+            "title": "Current",
+            "type": "boolean"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "What the candidate did, summarised from the CV without adding anything.",
+            "title": "Description"
+          },
+          "technologies": {
+            "description": "Tools and technologies explicitly mentioned for this experience.",
+            "items": {
+              "description": "One technology or tool name, e.g. \"React\".",
+              "minLength": 1,
+              "type": "string"
+            },
+            "title": "Technologies",
+            "type": "array"
+          }
+        },
+        "required": [
+          "company",
+          "position",
+          "type",
+          "location",
+          "start_date",
+          "end_date",
+          "current",
+          "description",
+          "technologies"
+        ],
+        "title": "Experience",
+        "type": "object"
+      },
+      "title": "Experience",
+      "type": "array"
+    },
+    "projects": {
+      "description": "Projects listed in the CV.",
+      "items": {
+        "additionalProperties": false,
+        "description": "One academic or personal project.",
+        "properties": {
+          "name": {
+            "description": "Project name or short title.",
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "What the project does and the candidate's role.",
+            "title": "Description"
+          },
+          "technologies": {
+            "description": "Tools and technologies explicitly mentioned for this project.",
+            "items": {
+              "description": "One technology or tool name, e.g. \"React\".",
+              "minLength": 1,
+              "type": "string"
+            },
+            "title": "Technologies",
+            "type": "array"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "pattern": "^https?://\\S+$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Link to the project, or null.",
+            "title": "Url"
+          },
+          "date": {
+            "anyOf": [
+              {
+                "pattern": "^\\d{4}(-(0[1-9]|1[0-2]))?$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "When the project was done, YYYY or YYYY-MM, or null.",
+            "title": "Date"
+          }
+        },
+        "required": [
+          "name",
+          "description",
+          "technologies",
+          "url",
+          "date"
+        ],
+        "title": "Project",
+        "type": "object"
+      },
+      "title": "Projects",
+      "type": "array"
+    },
+    "skills": {
+      "description": "Skills listed in the CV. Never add skills that are not written.",
+      "items": {
+        "additionalProperties": false,
+        "description": "One skill listed in the CV.",
+        "properties": {
+          "name": {
+            "description": "Skill name as written, e.g. \"Python\", \"React\", \"Teamwork\".",
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "category": {
+            "description": "\"technical\" for languages/frameworks/methods, \"tool\" for software, \"soft\" for soft skills.",
+            "enum": [
+              "technical",
+              "tool",
+              "soft"
+            ],
+            "title": "Category",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "category"
+        ],
+        "title": "Skill",
+        "type": "object"
+      },
+      "title": "Skills",
+      "type": "array"
+    },
+    "languages": {
+      "description": "Spoken languages.",
+      "items": {
+        "additionalProperties": false,
+        "description": "One spoken language.",
+        "properties": {
+          "name": {
+            "description": "Language name, e.g. \"Arabic\", \"French\", \"English\".",
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "level": {
+            "anyOf": [
+              {
+                "enum": [
+                  "native",
+                  "fluent",
+                  "advanced",
+                  "intermediate",
+                  "basic"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Level mapped to this scale (C2→fluent, C1→advanced, B1/B2→intermediate, A1/A2→basic), or null.",
+            "title": "Level"
+          }
+        },
+        "required": [
+          "name",
+          "level"
+        ],
+        "title": "Language",
+        "type": "object"
+      },
+      "title": "Languages",
+      "type": "array"
+    },
+    "certifications": {
+      "description": "Certifications and certificates.",
+      "items": {
+        "additionalProperties": false,
+        "description": "One certification or certificate.",
+        "properties": {
+          "name": {
+            "description": "Certification name.",
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "issuer": {
+            "anyOf": [
+              {
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Organisation that issued it, e.g. \"Cisco\", \"Coursera\".",
+            "title": "Issuer"
+          },
+          "date": {
+            "anyOf": [
+              {
+                "pattern": "^\\d{4}(-(0[1-9]|1[0-2]))?$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Date obtained, YYYY or YYYY-MM, or null.",
+            "title": "Date"
+          }
+        },
+        "required": [
+          "name",
+          "issuer",
+          "date"
+        ],
+        "title": "Certification",
+        "type": "object"
+      },
+      "title": "Certifications",
+      "type": "array"
+    },
+    "classification": {
+      "additionalProperties": false,
+      "description": "Classification used for search and filters.",
+      "properties": {
+        "domain": {
+          "description": "Main professional domain, chosen from the fixed list.",
+          "enum": [
+            "software_engineering",
+            "data_ai",
+            "cybersecurity",
+            "networks_telecom",
+            "embedded_iot",
+            "electrical_engineering",
+            "mechanical_engineering",
+            "civil_engineering",
+            "industrial_engineering",
+            "business_management",
+            "finance_accounting",
+            "marketing_communication",
+            "design_multimedia",
+            "other"
+          ],
+          "title": "Domain",
+          "type": "string"
+        },
+        "seniority": {
+          "description": "\"student\" if still studying, \"junior\" if under 2 years of experience, else \"experienced\".",
+          "enum": [
+            "student",
+            "junior",
+            "experienced"
+          ],
+          "title": "Seniority",
+          "type": "string"
+        },
+        "years_experience": {
+          "description": "Total years of professional experience, internships excluded, rounded to 0.5.",
+          "maximum": 60,
+          "minimum": 0,
+          "title": "Years Experience",
+          "type": "number"
+        }
+      },
+      "required": [
+        "domain",
+        "seniority",
+        "years_experience"
+      ],
+      "title": "Classification",
+      "type": "object"
+    },
+    "looking_for": {
+      "anyOf": [
+        {
+          "enum": [
+            "pfe",
+            "internship",
+            "job"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "What the candidate is looking for, chosen on the upload page: \"pfe\", \"internship\" or \"job\".",
+      "title": "Looking For"
+    }
+  },
+  "required": [
+    "basics",
+    "availability",
+    "education",
+    "experience",
+    "projects",
+    "skills",
+    "languages",
+    "certifications",
+    "classification",
+    "looking_for"
+  ],
+  "title": "CandidateProfile",
+  "type": "object"
+}

@@ -4,7 +4,7 @@
 
 Read the README first. These rules come from the project design; a PR that breaks one is sent back.
 
-1. **One embedding model: `mistral-embed`.** Never add another one, not even as a fallback.
+1. **One embedding model: `gemini-embedding-001` at 1024 dimensions** (`GEMINI_EMBED_MODEL`). Never add another one, not even as a fallback: the stored vectors must all come from the same model. (Was `mistral-embed` until 29 Oct: the project moved to Gemini only.)
 2. **No original CV file is kept.** The worker deletes the upload when its job ends, success or failure.
 3. **Row-level security on every table.** A new table without policies is a data leak.
 4. **Keys only in `.env` and server code.** Never in `NEXT_PUBLIC_` variables, client components, git or ClickUp.

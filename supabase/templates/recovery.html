@@ -1,0 +1,15 @@
+<!-- S1-27 · Password reset email, Achraf's texts. English, then French. The token_hash link works from any
+     device (S1-26). {{ .RedirectTo }} is /auth/callback?lang=en|fr&flow=recovery, set by "Forgot password".
+     "One hour" is otp_expiry in supabase/config.toml: change both together. -->
+<p>Hi,</p>
+<p>We received a request to reset your password for the Pristini Job Fair platform. Click the button below to choose a new one.</p>
+<p><a href="{{ .RedirectTo }}&token_hash={{ .TokenHash }}&type=recovery"
+      style="display:inline-block;padding:12px 20px;background:#0B5BD3;color:#ffffff;border-radius:10px;text-decoration:none">
+  Reset my password · Réinitialiser mon mot de passe</a></p>
+<p>This link expires in one hour. If you didn't ask to reset your password, no worries: just ignore this email and your account stays secure.</p>
+<p>See you soon,<br>The Pristini Junior Entreprise Team</p>
+<hr>
+<p>Bonjour,</p>
+<p>Vous avez demandé à réinitialiser votre mot de passe sur la plateforme Pristini Job Fair. Cliquez sur le bouton ci-dessus pour en choisir un nouveau.</p>
+<p>Ce lien expire dans une heure. Si vous n'avez pas fait cette demande, ignorez simplement cet e-mail : votre mot de passe actuel reste inchangé.</p>
+<p>À bientôt,<br>L'équipe Pristini Junior Entreprise</p>

@@ -1,0 +1,15 @@
+<!-- S1-27 · Account confirmation email, Achraf's texts. One template for everyone: English, then French.
+     The link carries a token_hash to /auth/callback, so it works from any device's mail app (S1-26).
+     {{ .RedirectTo }} is /auth/callback?lang=en|fr, set by the sign-up (app/api/candidate/auth). -->
+<p>Hi,</p>
+<p>Welcome to the Pristini Job Fair platform! Please confirm your email address by clicking the button below, so you can upload your CV and make your profile visible to recruiters.</p>
+<p><a href="{{ .RedirectTo }}&token_hash={{ .TokenHash }}&type=email"
+      style="display:inline-block;padding:12px 20px;background:#0B5BD3;color:#ffffff;border-radius:10px;text-decoration:none">
+  Confirm my email · Confirmer mon adresse e-mail</a></p>
+<p>If you didn't create an account on our platform, you can safely ignore this email.</p>
+<p>Best of luck at the fair!<br>The Pristini Junior Entreprise Team</p>
+<hr>
+<p>Bonjour,</p>
+<p>Bienvenue sur la plateforme du Pristini Job Fair ! Cliquez sur le bouton ci-dessus pour confirmer votre adresse e-mail, importer votre CV et rendre votre profil visible auprès des entreprises présentes.</p>
+<p>Si vous n'êtes pas à l'origine de cette inscription, vous pouvez ignorer cet e-mail.</p>
+<p>Bon courage pour le salon !<br>L'équipe Pristini Junior Entreprise</p>

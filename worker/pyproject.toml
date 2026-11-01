@@ -2,6 +2,8 @@
 [tool.pytest.ini_options]
 pythonpath = ["."]
 testpaths = ["tests"]
+# supabase-py 2.33 warns about its own internals; nothing we can change from here.
+filterwarnings = ["ignore::DeprecationWarning:supabase._sync.client"]
 
 [tool.ruff]
 line-length = 100

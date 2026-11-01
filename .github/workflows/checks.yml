@@ -15,6 +15,7 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - run: npm test               # unit tests (tests/unit), no database
       - run: npm run lint
       - run: npm run build
 
@@ -39,5 +40,23 @@ jobs:
       - uses: supabase/setup-cli@v1
         with:
           version: 2.117.0
-      - run: supabase db start      # only Postgres, with every migration applied
-      - run: supabase test db       # tables, queue and access-rule tests
+      # Postgres + login + REST + storage, with every migration applied (no studio, no email UI).
+      - run: supabase start -x realtime,imgproxy,mailpit,postgres-meta,studio,edge-runtime,logflare,vector,supavisor
+      - run: supabase test db       # tables, queue, access-rule and storage tests
+      # The API tests (tests/api) call the real app with real logins on this database.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: python3 scripts/local_env.py
+      - run: npm run build
+      - run: npm run start &
+      - run: for i in $(seq 60); do curl -sf -o /dev/null http://127.0.0.1:3000 && exit 0; sleep 1; done; exit 1
+      - run: npm run test:api
+      # The worker's queue tests (worker/tests/test_queue.py) need this database too.
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt && pytest tests/test_queue.py
+        working-directory: worker

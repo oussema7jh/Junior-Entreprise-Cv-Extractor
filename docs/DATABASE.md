@@ -61,7 +61,7 @@ Every table is linked to the user's account (`auth.users`, Supabase's own table)
 | `looking_for` | `pfe`, `internship` or `job`. Chosen by the candidate at upload, never by the AI |
 | `data` | The whole profile (name, education, skills…) as JSON, shaped by `worker/cv_worker/schema.py` |
 | `search_tsv` | Filled automatically from `data`: every word in the profile, ready for fast word search ("PyTorch", "ENIT"). Never written by hand |
-| `embedding` | 1,024 numbers from `mistral-embed` that represent the profile's meaning, for "search by meaning". Empty until the worker computes it |
+| `embedding` | 1,024 numbers from `gemini-embedding-001` (was `mistral-embed` before 29 Oct; no vector was stored with it) that represent the profile's meaning, for "search by meaning". Empty until the worker computes it |
 | `approved_at` | When the candidate last approved |
 | `created_at`, `updated_at` | When the row was created and last changed (`updated_at` updates itself) |
 
@@ -71,7 +71,7 @@ Every table is linked to the user's account (`auth.users`, Supabase's own table)
 |---|---|
 | `user_id` | The candidate's account. At most one draft at a time: a new upload replaces it |
 | `data` | What the AI extracted, same shape as `profiles.data`. The review form edits this |
-| `provider` | Which AI produced it: `mistral` or `gemini` (the fallback) |
+| `provider` | Which AI produced it: `gemini` (the project is Gemini only since 29 Oct; the column still accepts `mistral`) |
 | `created_at`, `updated_at` | As above |
 
 **Why a separate table and not a column on `profiles`?** RLS works per row. A company allowed
@@ -94,21 +94,34 @@ to read an approved profile row would also read any column on it, including an u
 | `user_id` | Whose CV it is |
 | `kind` | `extract` (read a CV) or `embed` (compute a profile's embedding) |
 | `status` | `queued` → `processing` → `done` or `failed` |
-| `attempts` | How many times the worker has tried it. After 3, it fails |
+| `attempts` | How many times the worker has tried it. After 3 tries with a busy AI an extract job fails; an embed job gets 10 (it can wait, the profile is already visible) |
 | `error_message` | Shown to the candidate when it fails, so plain words only, never a technical error |
 | `file_path` | Where the uploaded file waits in the temporary storage bucket. The file is deleted when the job ends |
 | `run_after` | The job is not picked before this time. Used to wait after the AI says "too many requests" (429) |
 | `started_at`, `finished_at` | When the worker started and finished it |
 | `created_at`, `updated_at` | As above. Jobs are handled oldest first |
 
-## The queue functions (for the worker only)
+## The server's functions (never the browser)
 
 | Function | What it does |
 |---|---|
 | `claim_next_job()` | Gives the worker the oldest job that may run now and marks it `processing`. Two workers asking at the same time get different jobs (`FOR UPDATE SKIP LOCKED`) |
 | `requeue_stuck_jobs()` | Run when the worker starts: jobs cut off by a crash go back to `queued`, or fail if they already had 3 attempts |
 
-Only the server (the service role key) can run them.
+| `approve_profile(user_id, data, draft_updated_at)` | Approval in one step (S1-32): deletes the draft, copies the checked data into `profiles`, sets `approved` and `approved_at`, queues an `embed` job. If the draft changed since the candidate reviewed it, it does nothing and returns `null`. Returns the `public_id` |
+
+Only the server (the service role key) can run them. For `approve_profile` that matters most: a
+candidate who could call it could approve any data, skipping the schema check
+(`supabase/tests/05_approve_profile.test.sql`).
+
+## The temporary CV bucket: `uploads-tmp`
+
+A private Supabase Storage bucket where an uploaded CV waits for the worker
+(`<user id>/<random>.pdf`). It has **no access policy on purpose**: the browser can't list, read
+or write anything in it, not even the file's owner. Only server code with the service role key
+reaches it: the upload API puts the file in, and the worker deletes it when the job ends,
+success or failure. Storage itself refuses files over 5 MB or of another type than PDF, JPG
+and PNG. Tests: `supabase/tests/04_uploads_bucket.test.sql`.
 
 ## Work on the database locally
 

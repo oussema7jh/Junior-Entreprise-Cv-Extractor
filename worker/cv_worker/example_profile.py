@@ -1,0 +1,68 @@
+"""A complete, valid profile. Used in tests and as a reference for the forms."""
+
+EXAMPLE_PROFILE: dict = {
+    "basics": {
+        "name": "Sarra Ben Ali",
+        "email": "sarra.benali@example.com",
+        "phone": "+216 20 123 456",
+        "city": "Tunis",
+        "country": "Tunisia",
+        "headline": "Computer engineering student",
+        "summary": "Final-year engineering student interested in machine learning and web development.",
+        "links": [
+            {"label": "LinkedIn", "url": "https://www.linkedin.com/in/sarra-benali"},
+            {"label": "GitHub", "url": "https://github.com/sarra-benali"},
+        ],
+    },
+    "availability": "February 2027",
+    "education": [
+        {
+            "institution": "École Nationale d'Ingénieurs de Tunis",
+            "degree": "Engineering degree",
+            "field": "Computer Science",
+            "start_date": "2024-09",
+            "end_date": "2027-06",
+            "current": True,
+            "grade": None,
+        }
+    ],
+    "experience": [
+        {
+            "company": "Acme Tunisia",
+            "position": "Software engineering intern",
+            "type": "internship",
+            "location": "Tunis, Tunisia",
+            "start_date": "2026-07",
+            "end_date": "2026-08",
+            "current": False,
+            "description": "Built a REST API for internal reporting.",
+            "technologies": ["Node.js", "PostgreSQL"],
+        }
+    ],
+    "projects": [
+        {
+            "name": "Plant disease detector",
+            "description": "Image classifier for tomato leaf diseases.",
+            "technologies": ["Python", "PyTorch"],
+            "url": None,
+            "date": "2026",
+        }
+    ],
+    "skills": [
+        {"name": "Python", "category": "technical"},
+        {"name": "Git", "category": "tool"},
+        {"name": "Teamwork", "category": "soft"},
+    ],
+    "languages": [
+        {"name": "Arabic", "level": "native"},
+        {"name": "French", "level": "fluent"},
+        {"name": "English", "level": "advanced"},
+    ],
+    "certifications": [{"name": "CCNA 1", "issuer": "Cisco", "date": "2025-05"}],
+    "classification": {
+        "domain": "software_engineering",
+        "seniority": "student",
+        "years_experience": 0,
+    },
+    "looking_for": "pfe",
+}
