@@ -5,10 +5,18 @@ Runs the real extraction on every CV in a folder, compares the labelled ones wit
 expected.csv, and prints a score per field with each mismatch.
 
     python -m cv_worker.eval_extraction ../cv-test-set [--expected expected.csv] [--out results_dir]
+    python -m cv_worker.eval_extraction --rescore <run>/results.json [--expected expected.csv]
+
+--rescore scores a saved run again, without calling Gemini (to compare runs with a newer scoring).
 
 expected.csv columns: file, full_name, email, phone, school, latest_degree, main_skills, languages.
 Lists use "; ". A cell may give several accepted answers separated by " | "
 (e.g. a name written in Arabic and in Latin letters on the same CV).
+
+Format checks (S2-17) run on every CV, labelled or not. They check what search needs: a skill is
+one skill (not "Databases (SQLite, PonyORM)", which a "SQLite" filter misses), language names are
+in English (a company filtering "English" misses "Anglais"), and the city is one city in Latin
+letters without a postal code (a "Sfax" filter misses "صفاقس").
 
 Each run is saved in <out>/<date-time>/ (profiles + scores), by default eval-results/ at the repo
 root. Results contain personal data: git ignores cv-test-set/ and eval-results/.
@@ -28,6 +36,7 @@ from pathlib import Path
 
 from cv_worker.extract import ExtractionResult, extract_cv
 from cv_worker.extract_one import MIME_BY_EXT, load_env_file
+from cv_worker.schema import CandidateProfile
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 FIELDS = ("name", "email", "phone", "school", "degree", "skills", "languages")
@@ -50,6 +59,18 @@ LANGUAGE_KEYS = {
     "italien": "it", "italian": "it",
     "espagnol": "es", "spanish": "es",
 }
+
+# Format checks: the share of values in the form search needs (1.00 = all of them).
+FORMAT_FIELDS = ("skill_split", "language_en", "city_form")
+ENGLISH_LANGUAGES = {
+    "arabic", "french", "english", "german", "italian", "spanish", "portuguese", "turkish", "russian",
+    "chinese", "mandarin", "japanese", "korean", "dutch", "polish", "romanian", "greek", "swedish",
+    "norwegian", "danish", "finnish", "czech", "hungarian", "ukrainian", "hebrew", "persian", "urdu",
+    "hindi", "bengali", "tamil", "berber", "tamazight", "kabyle", "amazigh", "wolof", "swahili",
+    "latin", "french sign language", "american sign language", "british sign language",
+}
+LIST_IN_SKILL = re.compile(r"[,;:]|\([^)]*$")  # "a, b", "Label: a", or a bracket left open
+CITY_FORM = re.compile(r"[A-Za-zÀ-ÖØ-öø-ÿ'’ .-]+")  # Latin letters, no digit, no "/" or ","
 
 
 # ---------------------------------------------------------------------------
@@ -172,6 +193,27 @@ def score_cv(row: dict, result: ExtractionResult) -> CvScore:
     return out
 
 
+def format_scores(profile: dict | None) -> tuple[dict[str, float | None], list[str]]:
+    """The format checks on one profile (a dict, as saved in results.json). None: nothing to check."""
+    if not profile:
+        return {f: 0.0 for f in FORMAT_FIELDS}, ["extraction failed"]
+    issues = []
+
+    def share(values: list[str], ok, name: str) -> float | None:
+        bad = [v for v in values if not ok(v)]
+        issues.extend(f"{name}: {v!r}" for v in bad)
+        return 1 - len(bad) / len(values) if values else None
+
+    city = (profile.get("basics") or {}).get("city")
+    return {
+        "skill_split": share([s["name"] for s in profile.get("skills", [])],
+                             lambda v: not LIST_IN_SKILL.search(v), "skill_split"),
+        "language_en": share([lang["name"] for lang in profile.get("languages", [])],
+                             lambda v: v.strip().lower() in ENGLISH_LANGUAGES, "language_en"),
+        "city_form": share([city] if city else [], lambda v: bool(CITY_FORM.fullmatch(v.strip())), "city_form"),
+    }, issues
+
+
 # ---------------------------------------------------------------------------
 # Running the test set
 # ---------------------------------------------------------------------------
@@ -237,12 +279,37 @@ def report(cv_scores: list[CvScore], runs: list[dict]) -> str:
                 lines.append(f"  {s.file}: {m}")
         if not any(s.mismatches for s in cv_scores):
             lines.append("  none")
+
+    checked = [(r["file"], *format_scores(r.get("profile"))) for r in runs]
+    lines.append(f"\nFormat checks on all {len(runs)} CVs (1.00 = every value in the form search needs):")
+    for f in FORMAT_FIELDS:
+        values = [scores[f] for _, scores, _ in checked if scores[f] is not None]
+        lines.append(f"  {f:<12} {sum(values) / len(values):.2f}  ({len(values)} CVs)" if values else f"  {f:<12} -")
+    lines.append("\nFormat issues:")
+    for file, _, issues in checked:
+        for issue in issues:
+            lines.append(f"  {file}: {issue}")
+    if not any(issues for _, _, issues in checked):
+        lines.append("  none")
     return "\n".join(lines)
+
+
+def rescore(results_json: Path, expected: dict[str, dict]) -> str:
+    """Scores a saved run again, without calling Gemini."""
+    runs = json.loads(results_json.read_text(encoding="utf-8"))
+    cv_scores = []
+    for r in runs:
+        if r["file"] in expected:
+            profile = CandidateProfile.model_validate(r["profile"]) if r.get("profile") else None
+            result = ExtractionResult(status=r["status"], profile=profile, code=r.get("code"), reason=r.get("reason"))
+            cv_scores.append(score_cv(expected[r["file"]], result))
+    return report(cv_scores, runs)
 
 
 def main(argv: list[str]) -> int:
     parser = argparse.ArgumentParser(prog="python -m cv_worker.eval_extraction")
-    parser.add_argument("folder", type=Path, help="one CV, or a folder with the test CVs (searched recursively)")
+    parser.add_argument("folder", type=Path, nargs="?", help="one CV, or a folder with the test CVs (searched recursively)")
+    parser.add_argument("--rescore", type=Path, help="a saved results.json to score again, without calling Gemini")
     parser.add_argument("--expected", type=Path, help="expected.csv (default: next to the folder)")
     parser.add_argument("--out", type=Path, help="where to save the run (default: eval-results/ at the repo root)")
     args = parser.parse_args(argv)
@@ -250,6 +317,11 @@ def main(argv: list[str]) -> int:
     # The Windows console is cp1252 by default and cannot print Arabic names.
     for stream in (sys.stdout, sys.stderr):
         stream.reconfigure(encoding="utf-8", errors="replace")
+    if args.rescore:
+        print(rescore(args.rescore, load_expected(args.expected or args.rescore.parent / "expected.csv")))
+        return 0
+    if args.folder is None:
+        parser.error("give a folder of CVs, or --rescore results.json")
     load_env_file()
     target = args.folder.resolve()
     folder = target.parent if target.is_file() else target
