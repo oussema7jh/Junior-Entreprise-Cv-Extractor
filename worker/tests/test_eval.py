@@ -2,6 +2,7 @@
 import copy
 
 from cv_worker.eval_extraction import (
+    format_scores,
     languages_match,
     norm,
     same_name,
@@ -56,6 +57,22 @@ def test_skills_and_languages():
     assert languages_match(["العربية"], ["Arabe"])[0] == 1.0
 
 
+
+def test_format_checks_find_what_search_would_miss():
+    profile = {
+        "basics": {"city": "Kélibia 8090, Nabeul"},
+        "skills": [{"name": "Python"}, {"name": "Symfony (PHP)"}, {"name": "TCP/IP"},
+                   {"name": "Base de données(SQLite, PonyORM)"}, {"name": "Versionement(Git, GitHub"}],
+        "languages": [{"name": "English"}, {"name": "arabic"}, {"name": "Anglais"}, {"name": "الإنجليزية"}],
+    }
+    scores, issues = format_scores(profile)
+    assert scores == {"skill_split": 0.6, "language_en": 0.5, "city_form": 0.0}
+    assert "skill_split: 'Base de données(SQLite, PonyORM)'" in issues
+    assert format_scores({"basics": {"city": "La Marsa"}, "skills": [], "languages": []})[0] == {
+        "skill_split": None, "language_en": None, "city_form": 1.0}
+    assert format_scores({"basics": {"city": "صفاقس"}})[0]["city_form"] == 0.0
+    assert format_scores(None)[0] == {"skill_split": 0.0, "language_en": 0.0, "city_form": 0.0}
+
 def test_scores_a_perfect_answer_and_lists_mismatches():
     profile = CandidateProfile.model_validate(EXAMPLE_PROFILE)
     expected = dict(
@@ -97,3 +114,11 @@ def test_a_daily_quota_stops_the_run_instead_of_sleeping_for_hours(monkeypatch, 
     cv.write_bytes(b"%PDF")
     with pytest.raises(eval_extraction.QuotaExhausted):
         eval_extraction.extract_with_retries(cv)
+
+
+def test_a_language_given_in_english_is_not_invented_when_the_cv_names_it_in_french_or_arabic():
+    from cv_worker.check_invented import language_found
+
+    assert language_found("English", " langues anglais courant ")
+    assert language_found("Arabic", " اللغات العربية ")
+    assert not language_found("German", " langues anglais courant ")

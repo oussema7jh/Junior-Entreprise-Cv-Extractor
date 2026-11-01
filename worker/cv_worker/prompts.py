@@ -15,7 +15,7 @@ from datetime import date
 
 from cv_worker.schema import DOMAINS
 
-PROMPT_VERSION = "v5"
+PROMPT_VERSION = "v6"
 
 # ---------------------------------------------------------------------------
 # Classification rules
@@ -80,8 +80,10 @@ EXTRACTION_SYSTEM_PROMPT = f"""You are a precise CV parser for a student job fai
 - Dates: "YYYY-MM", or "YYYY" if the month is not given. "Sept. 2024", "09/2024" and "septembre 2024" all become "2024-09". A single date field never holds a range: for a project dated "2025-2026", use the end ("2026").
 - An ongoing entry ("present", "aujourd'hui", "en cours", "now", "حاليا"): set current to true and end_date to null.
 - Email and phone: copy exactly; keep the country code if present. Links: full URL; add "https://" if the CV shows only "linkedin.com/in/...". A link that contains spaces or is cut off is not a usable URL: leave it out.
+- City (basics.city): one city name in Latin letters, without postal code, region or neighbourhood, so a company can filter on it ("Kélibia 8090, Nabeul" → "Kélibia"; "Soliman, Nabeul" → "Soliman"; "صفاقس" → "Sfax"). If the CV lists several cities, keep the first.
+- Language names: always the English name, whatever the language of the CV, so every profile can be searched the same way ("Anglais", "ANGLAIS" and "الإنجليزية" → "English"; "Arabe" → "Arabic"; "Langue des signes française" → "French Sign Language").
 - Language levels: map to native / fluent / advanced / intermediate / basic. CEFR: C2 → fluent, C1 → advanced, B1 and B2 → intermediate, A1 and A2 → basic. "Langue maternelle" or "mother tongue" → native. No level written → null.
-- Skills: one entry per skill, as written. "technical" for programming languages, frameworks and methods; "tool" for software and platforms; "soft" for soft skills. Do not split or merge skills beyond what the CV lists.
+- Skills: one entry per skill, as written. "technical" for programming languages, frameworks and methods; "tool" for software and platforms; "soft" for soft skills. A skill name never holds a list: when the CV groups skills under a label or in brackets, give each listed item its own entry and leave out a label that is not a skill itself ("Base de données (SQLite, PonyORM)" → "SQLite", "PonyORM"; "Linux (Kali, Ubuntu)" → "Linux", "Kali", "Ubuntu"; "VLAN, DHCP, DNS" → three skills). A single detail in brackets stays ("Symfony (PHP)"). A section title ("Compétences", "Skills", "المهارات") is never part of a skill name. Never merge skills.
 - Job titles, degree names and school names: copy them word for word, even when they are generic ("Stage d'initiation" stays "Stage d'initiation", never "Stagiaire").
 - Experience type: a PFE, "stage" or summer internship is "internship"; a paid position is "job"; self-employed missions are "freelance"; associations and clubs are "volunteer".
 - Order education and experience from most recent to oldest: ongoing entries first, then by end date. A short exchange semester or certificate course never goes before the degree programme it belongs to.
