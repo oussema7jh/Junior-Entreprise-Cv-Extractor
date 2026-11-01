@@ -29,8 +29,9 @@ export async function POST(request: Request) {
   ]);
   if (!draft || !profile) return error(404, "no_draft");
 
-  // looking_for is the candidate's choice on the upload page, never the AI's.
-  const check = checkApproval({ ...draft.data, looking_for: profile.looking_for });
+  // looking_for is the candidate's choice on the upload page, never the AI's: the one made with this
+  // draft's upload (S2-16), else the profile's. approve_profile copies it onto the live profile.
+  const check = checkApproval({ ...draft.data, looking_for: draft.data?.looking_for ?? profile.looking_for });
   if (!check.ok) return error(422, "invalid_profile", { fields: check.fields });
 
   const { data: publicId, error: failed } = await createAdminClient().rpc("approve_profile", {
