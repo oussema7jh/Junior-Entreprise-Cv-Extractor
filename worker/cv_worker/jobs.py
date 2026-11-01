@@ -123,7 +123,9 @@ class SupabaseStore:
 def _run_extract(job: dict, store: SupabaseStore, extract: Extract) -> str:
     path = job["file_path"]
     mime = MIME_BY_EXTENSION.get(path.rsplit(".", 1)[-1].lower(), "application/octet-stream")
-    result = extract(store.download(path), mime, looking_for=store.looking_for(job["user_id"]))
+    # The choice made with this upload (S2-16); jobs queued before it was stored use the profile's.
+    looking_for = job.get("looking_for") or store.looking_for(job["user_id"])
+    result = extract(store.download(path), mime, looking_for=looking_for)
     if result.status == "succeeded":
         store.save_draft(job["user_id"], result.profile.model_dump(mode="json"))
         store.finish(job["id"], "done")

@@ -61,16 +61,17 @@ export async function POST(request: Request) {
     .upload(path, await file!.arrayBuffer(), { contentType: MIME_TYPES[check.type] });
   if (stored.error) return fail(500, "upload_failed");
 
-  // The profile row stays as it is if it exists (an approved profile stays visible, design §10a.4);
-  // only looking_for follows the candidate's latest choice.
+  // An existing profile row stays exactly as it is: an approved profile stays visible, unchanged,
+  // while the new CV is reviewed (design §10a.4, S2-16). The new looking_for travels with the job
+  // into the draft, and reaches the live profile only when the candidate approves.
   const profile = await admin
     .from("profiles")
-    .upsert({ user_id: userId, looking_for: lookingFor }, { onConflict: "user_id" });
+    .upsert({ user_id: userId, looking_for: lookingFor }, { onConflict: "user_id", ignoreDuplicates: true });
   const job = profile.error
     ? null
     : await admin
         .from("extraction_jobs")
-        .insert({ user_id: userId, kind: "extract", file_path: path })
+        .insert({ user_id: userId, kind: "extract", file_path: path, looking_for: lookingFor })
         .select("id")
         .single();
 

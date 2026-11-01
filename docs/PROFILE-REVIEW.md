@@ -20,8 +20,8 @@ required. Degree, dates and language level are optional (Ahmed, 29 October).
 
 The server action checks the confirmed candidate session, validates the draft
 structure, and writes through the existing user client/RLS. Owner and updated_at
-filters reject stale saves. looking_for comes from profiles, never submitted form
-data. Failed saves retain edits. Approval saves first, then posts that saved
+filters reject stale saves. looking_for comes from the draft (the choice made with its
+upload, S2-16; older drafts fall back to profiles), never submitted form data. Failed saves retain edits. Approval saves first, then posts that saved
 updated_at to the real endpoint. Validation errors open/focus affected cards;
 conflicts and authentication failures are explicit. Only the expected approved
 page redirect is accepted.

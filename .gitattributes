@@ -1,0 +1,14 @@
+# Every text file is stored with LF line endings, whatever the editor or the OS (Windows saves
+# CRLF by default). Without this, a file saved on Windows shows every line as changed: the PR
+# looks 3x bigger and conflicts with everyone's work on the same file.
+* text=auto eol=lf
+
+# Binary files: never touch them.
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.webp binary
+*.ico  binary
+*.pdf  binary
+*.docx binary

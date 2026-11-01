@@ -16,7 +16,7 @@ import re
 import sys
 from pathlib import Path
 
-from cv_worker.eval_extraction import REPO_ROOT, norm
+from cv_worker.eval_extraction import LANGUAGE_KEYS, REPO_ROOT, language_key, norm
 
 HTML_DIR = REPO_ROOT / "cv-test-set" / "html"
 # The 5 prompt test CVs (S1-19): Word style, Canva with an Arabic name, English, office scan, Arabic CV.
@@ -52,6 +52,12 @@ def found(value: str, text: str) -> bool:
     return len(words) >= 3 and sum(f" {w} " in text for w in words) / len(words) >= 0.8
 
 
+def language_found(name: str, text: str) -> bool:
+    """Language names are given in English (S2-17): "English" is in a CV that says "Anglais" or "الإنجليزية"."""
+    key = language_key(name)
+    return found(name, text) or any(found(alias, text) for alias, k in LANGUAGE_KEYS.items() if k == key)
+
+
 def main(argv: list[str]) -> int:
     parser = argparse.ArgumentParser(prog="python -m cv_worker.check_invented")
     parser.add_argument("results", type=Path, nargs="?", help="results.json of a run (default: the latest in eval-results/)")
@@ -70,7 +76,8 @@ def main(argv: list[str]) -> int:
             total_invented += 1
             continue
         text = source_text(stem, args.html)
-        invented = [f"{kind} {value!r}" for kind, value in claims(run["profile"]) if not found(value, text)]
+        invented = [f"{kind} {value!r}" for kind, value in claims(run["profile"])
+                    if not (language_found if kind == "language" else found)(value, text)]
         total_invented += len(invented)
         print(f"{stem}: {len(claims(run['profile']))} values checked, {len(invented)} not in the CV" + "".join(f"\n    - {x}" for x in invented))
     print(f"\nInvented values on the {len(TEST_CVS)} test CVs: {total_invented}  ({results_file.parent.name})")

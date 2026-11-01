@@ -26,6 +26,7 @@ Fictional CVs, so the exact answers are known (`cv-test-set/expected.csv`, in Ah
 
 How to check (from `cv-extractor/`):
 - Scores against expected.csv (from `worker/`): `python -m cv_worker.eval_extraction ../cv-test-set/fictional` (one file works too).
+- Format checks (S2-17) on every CV in the run, labelled or not: skills that hold a list, language names not in English, a city that isn't one city in Latin letters. `--rescore <run>/results.json` scores a saved run again without calling Gemini.
 - Invented values on these 5 CVs (from `worker/`): `python -m cv_worker.check_invented`. It looks for every skill, technology, company, job title, project, school, certification and language of the answer in the CV's source text, and prints what it cannot find.
 
 Tests on 29 Oct ran on `gemini-3.5-flash-lite`: `gemini-3.5-flash` had used its free quota of 20 requests a day (see [AI_LIMITS.md](AI_LIMITS.md)).
@@ -40,6 +41,37 @@ Two rules are mechanical, and the AI did not apply them reliably, so `worker/cv_
 - **Order.** Even with the v3 rule, fx23 sometimes put the finished exchange semester before the bachelor in progress. The code now sorts education and experience: ongoing first, then by end date.
 
 **Results** (all 30 CVs, 29 through the Flash-Lite fallback of S1-21): 30 of 30 succeed, 1.00 on every field of the 10 labelled CVs, 0 invented values on the 5 test CVs. Checked by eye: li03, li06, ds20 now junior (right), fx25 experienced (2.2 years in a paid job, right), li08 student (right), li10 junior (right; domain "finance_accounting" defensible: finance master, QA job on finance software).
+
+## v6 (1 Nov 2026, S2-17): skills, language names and city in the form search needs
+
+**Why.** The 7 fields the quality script scored were already at 1.00, except skills (0.97: ds19 lost
+"SQLite" and "Git"). The 30 results showed the real weak fields were ones search uses as filters (S2-12):
+- **Skills given as groups:** "Base de données(SQLite, PonyORM)" was one skill, so a "SQLite" filter missed it (20 grouped skills in 10 CVs).
+- **Language names in 3 languages:** "Anglais", "English", "ANGLAIS" and "الإنجليزية". A company filtering on "English" missed most candidates.
+- **City:** "صفاقس" instead of Sfax, "Kélibia 8090, Nabeul" with a postal code, "Rouen / Lille / Paris".
+
+The quality script now measures these on all 30 CVs, labelled or not (**format checks**, see
+`eval_extraction.py`), and `--rescore` scores a saved run again without calling Gemini.
+
+**What changed, one rule at a time, each one measured on the 30 CVs before the next:**
+1. Skills: a skill name never holds a list. Grouped skills become one entry each, a label that isn't a skill is left out, a single detail in brackets stays ("Symfony (PHP)"), and a section title is never part of a skill. The first wording glued "المهارات :" ("Skills:") onto a skill of fx30, so the section-title sentence was added and measured again.
+2. Language names: always the English name.
+3. City: one city in Latin letters, without postal code, region or neighbourhood; the first if several.
+
+**Results** (all 30 CVs; the scored fields on the 15 labelled CVs):
+
+| Field | Before (v5) | 1. skills | 2. languages | 3. city (v6) |
+|---|---|---|---|---|
+| name, email, phone, school, degree, languages | 1.00 | 1.00 | 1.00 | 1.00 |
+| skills | 0.97 | 1.00 | 1.00 | 1.00 |
+| skill_split | 0.96 | 0.99 | 1.00 | 0.99 |
+| language_en | 0.16 | 0.16 | 1.00 | 1.00 |
+| city_form | 0.87 | 0.83 | 0.90 | 1.00 |
+
+- No field ends lower than before. city_form moved 0.87 → 0.83 → 0.90 before its own rule, with no city change: that's Gemini varying from run to run (ds11 and li04 cities came back differently), even at temperature 0. skill_split varies the same way between 0.99 and 1.00.
+- The languages run had 5 CVs answered by the fallback model. On the 25 Flash-Lite answers alone, language_en was also 1.00, so the change comes from the rule.
+- Invented values on the 5 prompt test CVs: 0. `check_invented` now accepts "English" when the CV says "Anglais" or "الإنجليزية".
+- Left as is: 6 skills that are one skill with its details ("Active Directory (AD DS, GPO, DNS, DHCP)"). Word search finds them anyway. ds20 gives "Blida", the province, rather than its town, Bougara.
 
 ## v5 (29 Oct 2026): no ranges in date fields, no broken links
 
