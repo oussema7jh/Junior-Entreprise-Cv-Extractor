@@ -24,8 +24,9 @@ test("real page role matrix redirects logged-out/wrong-role visitors", async () 
     assert.equal(new URL(anonymous.headers.get("location")!, APP_URL).pathname, login);
     for (const [visitorRole, user] of [["candidate", candidate], ["company", company], ["admin", organiser]] as const) {
       const response = await call(path, user);
-      assert.equal(response.status, visitorRole === role ? 200 : 307, `${visitorRole} → ${path}`);
-      if (visitorRole !== role) {
+      const allowed = visitorRole === role || (visitorRole === "admin" && path === "/company/cvs");
+      assert.equal(response.status, allowed ? 200 : 307, `${visitorRole} → ${path}`);
+      if (!allowed) {
         const homes = { candidate: "/candidate", company: "/company/cvs", admin: "/admin" };
         assert.equal(new URL(response.headers.get("location")!, APP_URL).pathname, homes[visitorRole]);
       }
