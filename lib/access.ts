@@ -12,9 +12,15 @@ export function requiredRole(path: string): Role | null {
   if (within(path, "/candidate") || within(path, "/api/candidate") || within(path, "/api/cv") || within(path, "/api/profile")) return "candidate";
   return null;
 }
+// Admin CV inspection does not grant access to company settings or company APIs.
+export function canAccess(path: string, role: Role | null): boolean {
+  const required = requiredRole(path);
+  if (!required) return true;
+  return role === required || (role === "admin" && (within(path, "/p") || within(path, "/company/cvs")));
+}
 export function pageRedirect(path: string, role: Role | null): string | null {
   const required = requiredRole(path);
-  if (required && role !== required) return role ? homeFor[role] : loginFor[required];
+  if (required && !canAccess(path, role)) return role ? homeFor[role] : loginFor[required];
   if (role && Object.values(loginFor).includes(path)) return homeFor[role];
   return null;
 }
