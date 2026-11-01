@@ -9,6 +9,21 @@ before(async () => {
   assert.equal(saved.error, null);
 });
 after(deleteTestUsers);
+test("admin reaches profile URLs and the CV list but not private company pages", async t => {
+  for (const path of ["/p/role-access-test", "/company/cvs"]) {
+    const response = await fetch(`${APP_URL}${path}`, { redirect: "manual", headers: { cookie: organiser.cookie } });
+    // A missing profile/reader may return 404 before its separate task is integrated.
+    // This checks the server gate: neither an auth redirect nor a 401/403 is allowed.
+    assert.ok([200, 404].includes(response.status), `${path}: ${response.status}`);
+    assert.equal(response.headers.get("location"), null);
+    t.diagnostic(`admin GET ${path}: ${response.status}, no authentication redirect`);
+  }
+  for (const path of ["/company", "/company/profile", "/company/settings"]) {
+    const response = await fetch(`${APP_URL}${path}`, { redirect: "manual", headers: { cookie: organiser.cookie } });
+    assert.equal(response.status, 307);
+    assert.equal(new URL(response.headers.get("location")!, APP_URL).pathname, "/admin");
+  }
+});
 test("server refuses wrong-role address-bar URLs, even without rendering a button", async t => {
   const users = { candidate, company, admin: organiser };
   const homes = { candidate: "/candidate", company: "/company/cvs", admin: "/admin" };
