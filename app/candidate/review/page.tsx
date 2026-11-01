@@ -26,7 +26,9 @@ async function ReviewDraft() {
   ]);
   if (error || profileError) return <p role="alert">{copy.failedLoad}</p>;
   if (!draft) return <p role="status">{copy.noDraft}</p>;
-  const parsed = DraftSchema.safeParse({ ...draft.data, looking_for: profile?.looking_for ?? null });
+  // The choice made with the latest upload is in the draft (S2-16); older drafts only have the profile's.
+  const lookingFor = draft.data?.looking_for ?? profile?.looking_for ?? null;
+  const parsed = DraftSchema.safeParse({ ...draft.data, looking_for: lookingFor });
   if (!parsed.success) return <p role="alert">{copy.invalidDraft}</p>;
-  return <ProfileReviewForm initialValues={{ ...parsed.data, looking_for: profile?.looking_for ?? null }} updatedAt={draft.updated_at} />;
+  return <ProfileReviewForm initialValues={{ ...parsed.data, looking_for: lookingFor }} updatedAt={draft.updated_at} />;
 }
