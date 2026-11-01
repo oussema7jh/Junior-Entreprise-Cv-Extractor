@@ -12,7 +12,8 @@ RLS also excludes disabled companies and hidden/unapproved profiles.
 | `/company/login`, `/admin/login` | Public auth forms; signed-in roles go to their own space |
 | `/auth/callback` | Public token verification |
 | `/candidate`, `/candidate/upload`, `/candidate/processing/:id`, `/candidate/review`, `/candidate/approved`, `/candidate/profile`, `/candidate/profile/edit`, `/candidate/account` | Candidate |
-| `/company/*`, `/p/*` | Active company |
+| `/company/cvs`, `/company/cvs/*`, `/p`, `/p/*` | Active company or admin (CV inspection) |
+| Other `/company/*` pages and `/api/company/*` | Active company only (apart from public login/auth) |
 | `/admin/*` | Admin (apart from login) |
 | `POST /api/candidate/auth` | Public action endpoint; validates Origin and credentials; login requires candidate role; logout works for every role |
 | `POST /api/company/auth`, `POST /api/admin/auth` | Public; same Origin, verified credentials and correct role required |
@@ -26,6 +27,10 @@ RLS also excludes disabled companies and hidden/unapproved profiles.
 Logged-out page requests go to the area's login. A wrong-role visitor goes to their own space.
 API requests get 401 when logged out or 403 for a wrong role; redirects never replace API errors.
 Static-looking suffixes do not bypass protected routes.
+The matcher deliberately omits image-extension exclusions: excluding every `.png`, for
+example, would skip authentication on `/p/private.png` as well. There are no public images
+yet. When adding them, use explicit protected-prefix matchers before excluding public-image
+requests, and verify both paths with Next's matcher test helper.
 
 ## Administrator seed
 

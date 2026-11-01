@@ -8,6 +8,9 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // Every path except static files and images, which don't need a session.
+  // Exclude framework assets. Do not exclude arbitrary image suffixes: a URL
+  // such as /p/private.png or /api/admin/export.png must still pass role checks.
+  // There are no public images yet; add explicit protected-prefix matchers
+  // before introducing a public-image optimization, so it cannot bypass Auth.
   matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
 };
