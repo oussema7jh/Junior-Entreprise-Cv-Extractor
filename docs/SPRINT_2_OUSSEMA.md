@@ -36,9 +36,11 @@ Disabling changes the live DB flag: existing sessions also lose page/API access 
 
 - S2-10's `/company/cvs` grid is not in main. A temporary translated landing page keeps login
   from ending in a 404; replace it with that task's screen when integrated.
-- S2-16 account deletion is not in main. `/candidate/account` states that deletion is not yet
-  available and directs candidates to the organisers. This is an integration point, not a claim
-  that account deletion is complete. Re-upload links to the existing candidate upload flow.
+- S2-16 account deletion is integrated from team PR #27. The profile's delete control requires
+  the exact confirmation `DELETE`, calls `POST /api/candidate/delete`, and redirects to `/`
+  only on success. The server removes temporary uploads before deleting the Auth account;
+  foreign-key cascades remove the profile, drafts and jobs. Errors remain visible in the form.
+  Re-upload links to the existing candidate upload flow.
 - Company/admin mockups from S2-02/S2-03 are not in this checkout. These screens use the
   existing club UI components and need visual comparison when those mockups are available.
 
@@ -54,19 +56,23 @@ Disabling changes the live DB flag: existing sessions also lose page/API access 
 6. Approve a candidate, edit their profile, verify the changed data and queued embedding.
    Hide the profile and verify it disappears from company RLS reads; show it again.
 7. Verify both languages and mobile layout. Download/scan the QR again; its public ID is stable.
+8. With a disposable test candidate, verify an incorrect delete confirmation is refused;
+   after `DELETE`, verify the session, profile, jobs and temporary uploads are removed.
 
 Unit tests and lint can run without credentials. API tests need the running app and local
 Supabase; SMTP delivery and UI acceptance require the controlled mailbox and staging setup.
 
 ## Validation in this checkout
 
-- 56 unit tests passed, including the three-role/logged-out matrix and code validation.
+- Unit coverage includes the three-role/logged-out matrix, access-code padding, company
+  search and deletion confirmation. Re-run the suite after each integration update.
 - ESLint passed; TypeScript `--noEmit --incremental false` passed.
 - `git diff --check` passed.
-- Production build attempted, blocked while loading Next config by the Windows SWC native
+- The local production build was blocked while loading Next config by the Windows SWC native
   compiler cache (`ERR_SWC_NATIVE_CACHE`, access denied / cache ownership validation).
-  No compiler security checks were disabled. Linux CI must verify the build.
-- API/database tests were added but not run here: Docker/Supabase CLI are not available.
+  No compiler security checks were disabled. GitHub Actions provides the Linux build check.
+- API/database tests, including S2-16's disposable-account deletion checks, run in GitHub
+  Actions with local Supabase; they cannot run on this Windows checkout without Docker.
 - No real admin was seeded, no production migration applied and no real email was sent.
 - Root layout now declares its `children` type explicitly, so standalone TypeScript checking
   does not depend on Next's generated `LayoutProps` file.

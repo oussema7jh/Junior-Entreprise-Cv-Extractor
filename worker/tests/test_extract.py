@@ -67,7 +67,7 @@ def test_turns_a_pdf_into_a_validated_profile():
 
     assert result.status == "succeeded"
     assert result.profile.model_dump() == EXAMPLE_PROFILE
-    assert result.meta["prompt_version"] == "v5"
+    assert result.meta["prompt_version"] == "v6"
     assert result.meta["provider"] == "gemini"
     assert result.meta["model"] == "gemini-3.8-flash"
     path, body = fake.requests[0]
