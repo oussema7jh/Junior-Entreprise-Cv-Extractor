@@ -25,6 +25,10 @@ test("real page role matrix redirects logged-out/wrong-role visitors", async () 
     for (const [visitorRole, user] of [["candidate", candidate], ["company", company], ["admin", organiser]] as const) {
       const response = await call(path, user);
       assert.equal(response.status, visitorRole === role ? 200 : 307, `${visitorRole} → ${path}`);
+      if (visitorRole !== role) {
+        const homes = { candidate: "/candidate", company: "/company/cvs", admin: "/admin" };
+        assert.equal(new URL(response.headers.get("location")!, APP_URL).pathname, homes[visitorRole]);
+      }
     }
   }
 });
@@ -36,6 +40,12 @@ test("admin API refuses candidate/company/logged-out calls and cross-site mutati
   assert.equal((await call("/api/admin/companies", organiser)).status, 200);
   const csrf = await fetch(`${APP_URL}/api/admin/companies/${company.id}/disable`, { method: "POST", headers: { cookie: organiser.cookie, origin: "https://other.example" } });
   assert.equal(csrf.status, 403);
+});
+
+test("company login accepts a code pasted with surrounding whitespace", async () => {
+  const response = await call("/api/company/auth", undefined, { email: company.email, password: ` \n${company.password}\t ` });
+  assert.equal(response.status, 200);
+  assert.equal((await response.json()).redirect, "/company/cvs");
 });
 
 test("disable blocks an existing session; enable restores it", async () => {

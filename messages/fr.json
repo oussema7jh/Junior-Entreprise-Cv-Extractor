@@ -457,7 +457,9 @@
     "emailFailed": "Le compte/code a été enregistré, mais l’envoi de l’e-mail a échoué. Utilisez « Renvoyer un code » pour en générer et envoyer un autre.",
     "loading": "Chargement des entreprises…",
     "empty": "Aucune entreprise inscrite.",
-    "retry": "Réessayer"
+    "retry": "Réessayer",
+    "search": "Rechercher une entreprise",
+    "noResults": "Aucune entreprise ne correspond à votre recherche."
   },
   "myProfile": {
     "title": "Mon profil",
@@ -488,6 +490,13 @@
     "accountPending": "La suppression du compte n’est pas encore disponible. Contactez les organisateurs pour demander la suppression.",
     "back": "Retour à mon profil",
     "manageCompanies": "Gérer les entreprises",
-    "browsePending": "Votre session entreprise est prête. La consultation des CV sera bientôt disponible."
+    "browsePending": "Votre session entreprise est prête. La consultation des CV sera bientôt disponible.",
+    "qrStable": "Votre QR code ne change jamais lorsque vous modifiez votre profil. Vous pouvez continuer à utiliser le même QR code téléchargé.",
+    "deleteWarning": "Cette action supprime définitivement votre compte, profil, brouillons et fichiers CV importés. Elle est irréversible.",
+    "deleteConfirm": "Saisissez DELETE pour confirmer",
+    "deleteSubmit": "Supprimer définitivement mon compte",
+    "deleteBusy": "Suppression…",
+    "deleteFailed": "Impossible de supprimer votre compte. Aucune suppression n’a été confirmée. Veuillez réessayer.",
+    "deleteCancel": "Annuler"
   }
 }

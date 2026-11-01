@@ -2,6 +2,7 @@
 import { useCallback, useRef, useState, type FormEvent } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import type { CompanyRow } from "@/lib/company";
+import { filterCompanies } from "@/lib/company-search";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,6 +12,8 @@ export function CompanyManagement({ initialRows }: { initialRows: CompanyRow[] }
   const t = useTranslations("companies");
   const locale = useLocale();
   const [rows, setRows] = useState<CompanyRow[]>(initialRows);
+  const [query, setQuery] = useState("");
+  const visibleRows = filterCompanies(rows, query);
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState("");
   const [failed, setFailed] = useState(false);
@@ -37,7 +40,9 @@ export function CompanyManagement({ initialRows }: { initialRows: CompanyRow[] }
   function add(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget, data = new FormData(form);
-    void run("/api/admin/companies", { name: data.get("name"), email: data.get("email"), sector: data.get("sector") }, form);
+    const email = String(data.get("email") || "").trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 254) { setFailed(true); setNotice("invalid"); return; }
+    void run("/api/admin/companies", { name: data.get("name"), email, sector: data.get("sector") }, form);
   }
   return <PageContainer><h1 className="text-3xl font-semibold">{t("title")}</h1>
     <form onSubmit={add} className="grid gap-4 rounded-xl border bg-card p-5 sm:grid-cols-3" aria-busy={busy}>
@@ -50,9 +55,10 @@ export function CompanyManagement({ initialRows }: { initialRows: CompanyRow[] }
       <h2 id="confirm-title" className="font-semibold">{t(pending.action)}</h2><p id="confirm-text">{t(pending.action === "resend" ? "confirmResend" : "confirmDisable", { name: pending.name })}</p>
       <div className="flex gap-3"><Button onClick={() => void run(`/api/admin/companies/${pending.id}/${pending.action}`)}>{t("confirm")}</Button><Button variant="outline" onClick={() => setPending(null)}>{t("cancel")}</Button></div>
     </section>}
+    <div className="grid gap-2"><Label htmlFor="company-search">{t("search")}</Label><Input id="company-search" type="search" value={query} onChange={event => setQuery(event.target.value)} /></div>
     <div className="overflow-x-auto rounded-lg border"><table className="w-full text-left text-sm"><caption className="sr-only">{t("title")}</caption><thead className="bg-muted"><tr>{(["name", "email", "sector", "created", "status", "actions"] as const).map(key => <th scope="col" key={key} className="p-3">{t(key)}</th>)}</tr></thead><tbody>
-      {rows.map(row => <tr key={row.user_id} className="border-t"><td className="p-3 font-medium">{row.name}</td><td className="p-3">{row.email}</td><td className="p-3">{row.sector}</td><td className="p-3 whitespace-nowrap">{new Intl.DateTimeFormat(locale, { dateStyle: "medium" }).format(new Date(row.created_at))}</td><td className="p-3">{t(row.disabled ? "disabled" : "active")}</td><td className="p-3"><div className="flex gap-2"><Button variant="outline" disabled={busy || row.disabled} onClick={() => setPending({ id: row.user_id, action: "resend", name: row.name })}>{t("resend")}</Button><Button variant="outline" disabled={busy} onClick={() => row.disabled ? void run(`/api/admin/companies/${row.user_id}/enable`) : setPending({ id: row.user_id, action: "disable", name: row.name })}>{t(row.disabled ? "enable" : "disable")}</Button></div></td></tr>)}
-      {!rows.length && !busy && <tr><td colSpan={6} className="p-6 text-center text-muted-foreground">{t("empty")}</td></tr>}
+      {visibleRows.map(row => <tr key={row.user_id} className="border-t"><td className="p-3 font-medium">{row.name}</td><td className="p-3">{row.email}</td><td className="p-3">{row.sector}</td><td className="p-3 whitespace-nowrap">{new Intl.DateTimeFormat(locale, { dateStyle: "medium" }).format(new Date(row.created_at))}</td><td className="p-3">{t(row.disabled ? "disabled" : "active")}</td><td className="p-3"><div className="flex gap-2"><Button variant="outline" disabled={busy || row.disabled} onClick={() => setPending({ id: row.user_id, action: "resend", name: row.name })}>{t("resend")}</Button><Button variant="outline" disabled={busy} onClick={() => row.disabled ? void run(`/api/admin/companies/${row.user_id}/enable`) : setPending({ id: row.user_id, action: "disable", name: row.name })}>{t(row.disabled ? "enable" : "disable")}</Button></div></td></tr>)}
+      {!visibleRows.length && !busy && <tr><td colSpan={6} className="p-6 text-center text-muted-foreground">{t(query.trim() ? "noResults" : "empty")}</td></tr>}
     </tbody></table></div>
   </PageContainer>;
 }

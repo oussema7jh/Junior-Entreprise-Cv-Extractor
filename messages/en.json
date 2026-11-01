@@ -457,7 +457,9 @@
     "emailFailed": "The account/code was saved, but email delivery failed. Use Resend code to generate and send another code.",
     "loading": "Loading companies…",
     "empty": "No companies registered yet.",
-    "retry": "Try again"
+    "retry": "Try again",
+    "search": "Search companies",
+    "noResults": "No companies match your search."
   },
   "myProfile": {
     "title": "My profile",
@@ -488,6 +490,13 @@
     "accountPending": "Account deletion is not available yet. Contact the organisers to request deletion.",
     "back": "Back to my profile",
     "manageCompanies": "Manage companies",
-    "browsePending": "Your company session is ready. CV browsing will be available soon."
+    "browsePending": "Your company session is ready. CV browsing will be available soon.",
+    "qrStable": "Your QR code never changes when you edit your profile. You can keep using the same downloaded QR code.",
+    "deleteWarning": "This permanently deletes your account, profile, drafts and uploaded CV files. This cannot be undone.",
+    "deleteConfirm": "Type DELETE to confirm",
+    "deleteSubmit": "Permanently delete my account",
+    "deleteBusy": "Deleting…",
+    "deleteFailed": "Unable to delete your account. Nothing has been confirmed deleted. Please try again.",
+    "deleteCancel": "Cancel"
   }
 }
