@@ -49,6 +49,18 @@ It's enforced in two layers (`supabase/migrations/*_access_rules.sql`):
 
 Every table is linked to the user's account (`auth.users`, Supabase's own table) with
 `on delete cascade`: **deleting an account deletes every row about that person**, in every table.
+`supabase/tests/08_account_deletion.test.sql` fails if a new table points at `auth.users` without it.
+
+**Checking it with SQL** (S2-16), with the deleted user's id. Every count must be 0:
+
+```sql
+select * from public.leftover_rows('<user id>');
+```
+
+`leftover_rows()` finds the tables itself (every column that references `auth.users`), so a table
+added later is checked too. Only the service role can run it (in Studio's SQL editor you are).
+`POST /api/candidate/delete` also removes the user's files left in `uploads-tmp`, which the
+database can't cascade to.
 
 ## profiles
 
@@ -58,7 +70,7 @@ Every table is linked to the user's account (`auth.users`, Supabase's own table)
 | `public_id` | A random 22-character token used in the QR code link (`/p/<public_id>`). Never a number, so nobody can guess other profiles' links |
 | `status` | `draft` until the candidate approves for the first time, then `approved`. Companies only see `approved` |
 | `hidden` | The candidate's "hide my profile" switch. Hidden profiles are invisible to companies but not deleted |
-| `looking_for` | `pfe`, `internship` or `job`. Chosen by the candidate at upload, never by the AI |
+| `looking_for` | `pfe`, `internship` or `job`. Chosen by the candidate at upload, never by the AI. On a re-upload the new choice goes live only when the candidate approves the new draft (S2-16) |
 | `data` | The whole profile (name, education, skills…) as JSON, shaped by `worker/cv_worker/schema.py` |
 | `search_tsv` | Filled automatically from `data`: every word in the profile, ready for fast word search ("PyTorch", "ENIT"). Never written by hand |
 | `embedding` | 1,024 numbers from `gemini-embedding-001` (was `mistral-embed` before 29 Oct; no vector was stored with it) that represent the profile's meaning, for "search by meaning". Empty until the worker computes it |
@@ -97,6 +109,7 @@ to read an approved profile row would also read any column on it, including an u
 | `attempts` | How many times the worker has tried it. After 3 tries with a busy AI an extract job fails; an embed job gets 10 (it can wait, the profile is already visible) |
 | `error_message` | Shown to the candidate when it fails, so plain words only, never a technical error |
 | `file_path` | Where the uploaded file waits in the temporary storage bucket. The file is deleted when the job ends |
+| `looking_for` | Extract jobs: the choice made with this upload. The worker puts it in the draft, so a re-upload doesn't change the live profile before approval (S2-16) |
 | `run_after` | The job is not picked before this time. Used to wait after the AI says "too many requests" (429) |
 | `started_at`, `finished_at` | When the worker started and finished it |
 | `created_at`, `updated_at` | As above. Jobs are handled oldest first |
@@ -107,8 +120,8 @@ to read an approved profile row would also read any column on it, including an u
 |---|---|
 | `claim_next_job()` | Gives the worker the oldest job that may run now and marks it `processing`. Two workers asking at the same time get different jobs (`FOR UPDATE SKIP LOCKED`) |
 | `requeue_stuck_jobs()` | Run when the worker starts: jobs cut off by a crash go back to `queued`, or fail if they already had 3 attempts |
-
-| `approve_profile(user_id, data, draft_updated_at)` | Approval in one step (S1-32): deletes the draft, copies the checked data into `profiles`, sets `approved` and `approved_at`, queues an `embed` job. If the draft changed since the candidate reviewed it, it does nothing and returns `null`. Returns the `public_id` |
+| `leftover_rows(user_id)` | The deletion check (S2-16): for every table pointing at `auth.users`, how many rows still belong to this user |
+| `approve_profile(user_id, data, draft_updated_at)` | Approval in one step (S1-32): deletes the draft, copies the checked data and its `looking_for` into `profiles`, sets `approved` and `approved_at`, queues an `embed` job. If the draft changed since the candidate reviewed it, it does nothing and returns `null`. Returns the `public_id` |
 
 Only the server (the service role key) can run them. For `approve_profile` that matters most: a
 candidate who could call it could approve any data, skipping the schema check

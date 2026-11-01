@@ -81,6 +81,23 @@ def test_a_cv_becomes_a_draft_the_job_is_done_and_the_file_is_gone(db):
     assert not file_exists(db, path)
 
 
+def test_a_re_upload_uses_the_choice_made_with_it_not_the_live_profiles(db):
+    # S2-16: the live profile keeps "pfe" until the candidate approves; the new draft has "job".
+    user = db.new_candidate(looking_for="pfe")
+    path = f"{user}/{uuid.uuid4()}.pdf"
+    db.storage.from_("uploads-tmp").upload(path, PDF, {"content-type": "application/pdf"})
+    db.table("extraction_jobs").insert(
+        {"user_id": user, "kind": "extract", "file_path": path, "looking_for": "job"}).execute()
+    ai = FakeAi("ok")
+    run(db, ai)
+
+    assert ai.calls == [(PDF, "application/pdf", "job")]
+    draft = db.table("profile_drafts").select("data").eq("user_id", user).single().execute().data
+    assert draft["data"]["looking_for"] == "job"
+    profile = db.table("profiles").select("looking_for").eq("user_id", user).single().execute().data
+    assert profile["looking_for"] == "pfe"
+
+
 def test_a_new_upload_replaces_the_older_draft(db):
     user = db.new_candidate()
     queue_upload(db, user)
